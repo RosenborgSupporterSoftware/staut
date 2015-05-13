@@ -4,8 +4,9 @@ import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStreamReader;
+import java.net.URL;
 import java.nio.file.Files;
-import java.nio.file.Paths;
+import java.util.List;
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
 import org.w3c.dom.Document;
@@ -70,6 +71,21 @@ public class STAut {
                 System.err.println("Cannot recognize data format of input file: " + inputFile);
                 System.exit(1);
             }
+        } else if(download) {
+            List<Integer> eventIds = Collector.findActiveEvents();
+            eventIds.sort(null);
+            System.out.println(eventIds);
+            if(downloadMode.equals("next")) {
+                Integer id = eventIds.get(0);
+                URL availabilityURL = Collector.extractAvailabilityURL(id);
+                File tmpFile = File.createTempFile(id.toString(), null);
+                Collector.download(availabilityURL, tmpFile);
+                String decoded = AvailabilityDecoder.decode(tmpFile);
+                if(outputFile != null) {
+                    writeDecodedOutput(decoded);
+                }
+                AvailabilityParser.parse(decoded, lerkendal);
+            }
         }
         
         if(dumpData) {
@@ -108,7 +124,12 @@ public class STAut {
                     } else if(arg.startsWith("--download=")) {
                         download=true;
                         String mode=arg.split("=")[1];
-                        downloadMode = mode;
+                        if(!(mode.equals("next") || mode.equals("all"))) {
+                            System.err.println("Download mode should be either'next' or 'all'");
+                            System.exit(1);
+                        } else {
+                            downloadMode = mode;
+                        }
                     } else {
                         System.err.println("Wrong syntax for --download option");
                         usage();
