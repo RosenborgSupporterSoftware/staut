@@ -9,8 +9,11 @@ import java.io.InputStreamReader;
 import java.io.OutputStream;
 import java.net.URL;
 import java.net.URLConnection;
+import java.text.SimpleDateFormat;
 import java.time.Duration;
+import static java.time.OffsetTime.now;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 import java.util.Map;
 import java.util.TreeMap;
@@ -24,6 +27,7 @@ import java.util.concurrent.TimeUnit;
  */
 public class Collector {
     
+    private static final SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm");
     private static final String BASE_BILLETTSERVICE_URL = "http://www.billettservice.no";
     private static final String BASE_EVENT_PAGE_URL = BASE_BILLETTSERVICE_URL + "/event/";
     private static final String LERKENDAL_URL = BASE_BILLETTSERVICE_URL + "/venue/lerkendal-stadion-trondheim-billetter/TLD/25?attractions=100563";
@@ -109,6 +113,11 @@ public class Collector {
             outStream.flush();
         }
         System.out.println("Finished downloading: " + file);
+    }
+    
+    public static File generateFileName(File dir, Integer eventId) {
+        Date now = new Date();
+        return new File(dir, eventId + "_" + dateFormat.format(now) + ".xml");
     }
     
 }

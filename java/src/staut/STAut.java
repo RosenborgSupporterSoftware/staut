@@ -6,6 +6,7 @@ import java.io.IOException;
 import java.io.InputStreamReader;
 import java.net.URL;
 import java.nio.file.Files;
+import java.util.ArrayList;
 import java.util.List;
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
@@ -23,7 +24,7 @@ public class STAut {
     private static String geometryPath;
     
     private static File inputFile = null;
-    private static File outputFile = null;
+    private static File outputDir = null;
     private static String downloadMode = "next";
     
     private static boolean printConfig = false;
@@ -33,6 +34,8 @@ public class STAut {
     private static boolean reportSectionData = false;
     private static boolean reportSummary = false;
     private static boolean reportTicketData = false;
+    
+    private static List<Stadium> stadiums = new ArrayList<>();
     
     /**
      * Handles decoding, inflating, parsing and reporting of geometry and
@@ -55,13 +58,13 @@ public class STAut {
             System.exit(0);
         }
         
-        Stadium lerkendal = new Stadium("Lerkendal");
         if(inputFile != null) {
+            Stadium lerkendal = new Stadium("Lerkendal");
             if(isCompressedXML(inputFile)) {
                 System.out.println("Treating input file as base64 encoded and compressed data");
                 String decoded = AvailabilityDecoder.decode(inputFile);
-                if(outputFile != null) {
-                    writeDecodedOutput(decoded);
+                if(outputDir != null) {
+                    writeDecodedOutput(decoded, new File(outputDir, inputFile.getName()));
                 }
                 AvailabilityParser.parse(decoded, lerkendal);
             } else if (isDecodedXML(inputFile)) {
@@ -71,40 +74,47 @@ public class STAut {
                 System.err.println("Cannot recognize data format of input file: " + inputFile);
                 System.exit(1);
             }
+            stadiums.add(lerkendal);
         } else if(download) {
             List<Integer> eventIds = Collector.findActiveEvents();
             eventIds.sort(null);
-            System.out.println(eventIds);
-            if(downloadMode.equals("next")) {
-                Integer id = eventIds.get(0);
+            for(Integer id : eventIds) {
+                Stadium lerkendal = new Stadium("Lerkendal");
                 URL availabilityURL = Collector.extractAvailabilityURL(id);
                 File tmpFile = File.createTempFile(id.toString(), null);
                 Collector.download(availabilityURL, tmpFile);
                 String decoded = AvailabilityDecoder.decode(tmpFile);
-                if(outputFile != null) {
-                    writeDecodedOutput(decoded);
+                if(outputDir != null) {
+                    File file = Collector.generateFileName(outputDir, id);
+                    writeDecodedOutput(decoded, file);
                 }
                 AvailabilityParser.parse(decoded, lerkendal);
+                stadiums.add(lerkendal);
+                if(downloadMode.equals("next")) {
+                    break;
+                }
             }
         }
         
-        if(dumpData) {
-            lerkendal.dump();
-        }
-        if(reportSectionData) {
-            lerkendal.reportSectionSummary();
-        }
-        if(reportTicketData) {
-            lerkendal.reportTicketSummary();
-        }
-        if(reportSummary) {
-            lerkendal.reportSummary();
+        for(Stadium stadium : stadiums) {
+            if(dumpData) {
+                stadium.dump();
+            }
+            if(reportSectionData) {
+                stadium.reportSectionSummary();
+            }
+            if(reportTicketData) {
+                stadium.reportTicketSummary();
+            }
+            if(reportSummary) {
+                stadium.reportSummary();
+            }
         }
     }
     
-    private static void writeDecodedOutput(String decoded) throws IOException {
-        System.out.println("Writing decoded data to file: " + outputFile.getAbsolutePath());
-        Files.write(outputFile.toPath(), decoded.getBytes());
+    private static void writeDecodedOutput(String decoded, File file) throws IOException {
+        System.out.println("Writing decoded data to file: " + file.getAbsolutePath());
+        Files.write(file.toPath(), decoded.getBytes());
     }
     
     private static void parseCommandline(String[] args) {
@@ -141,7 +151,7 @@ public class STAut {
                     inputFile = new File(input);
                 } else if (arg.startsWith("--output=")) {
                     String output=arg.split("=")[1];
-                    outputFile = new File(output);
+                    outputDir = new File(output);
                 } else if (arg.equals("--report_section_data")) {
                     reportSectionData=true;
                 }  else if (arg.equals("--report_summary")) {

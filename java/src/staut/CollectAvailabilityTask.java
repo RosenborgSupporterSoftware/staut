@@ -3,16 +3,12 @@ package staut;
 import java.io.File;
 import java.io.IOException;
 import java.net.URL;
-import java.text.SimpleDateFormat;
-import java.util.Date;
 import java.util.TimerTask;
 
 /**
  * Thread that periodically downloads availability data for a specific event.
  */
 public class CollectAvailabilityTask extends TimerTask {
-
-    private static final SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm");
     private final URL availabilityURL;
     private final Integer eventId;
     
@@ -31,10 +27,9 @@ public class CollectAvailabilityTask extends TimerTask {
     }
     
     private void downloadAvailability(URL url) throws IOException {
-        Date now = new Date();
         File dir = new File(Configuration.getArchiveDirectory(), eventId.toString());
         dir.mkdirs();
-        File xmlFile = new File(dir, eventId + "_" + dateFormat.format(now) + ".xml");
+        File xmlFile = Collector.generateFileName(dir, eventId);
         Collector.download(url, xmlFile);
     }
     
