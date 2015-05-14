@@ -30,7 +30,7 @@ public class GeometryParser {
         Reader reader = new InputStreamReader(gs, ENCODING);
         InputSource source = new InputSource(reader);
 
-        System.out.println("Parsing: " + geometry);
+        STAut.info("Parsing: " + geometry);
         Document document = builder.parse(source);
 
         NodeList nodeList = document.getDocumentElement().getChildNodes();
@@ -84,7 +84,7 @@ public class GeometryParser {
                 }
             }
         }
-        System.out.println("Parsing done");
+        STAut.info("Parsing done");
     }
     
 }

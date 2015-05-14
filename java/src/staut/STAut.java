@@ -20,13 +20,13 @@ import org.xml.sax.InputSource;
  * @author vemund
  */
 public class STAut {
-
-    private static String geometryPath;
-    
     private static File inputFile = null;
     private static File outputDir = null;
     private static String downloadMode = "next";
+    private static String sectionName = null;
+    private static String ticketType = null;
     
+    private static boolean verbose = true;
     private static boolean printConfig = false;
     private static boolean dumpData = false;
     private static boolean collector = false;
@@ -34,8 +34,11 @@ public class STAut {
     private static boolean reportSectionData = false;
     private static boolean reportSummary = false;
     private static boolean reportTicketData = false;
+    private static boolean reportOpen = false;
+    private static boolean reportSold = false;
+    private static boolean reportHold = false;
     
-    private static List<Stadium> stadiums = new ArrayList<>();
+    private static final List<Stadium> stadiums = new ArrayList<>();
     
     /**
      * Handles decoding, inflating, parsing and reporting of geometry and
@@ -47,11 +50,11 @@ public class STAut {
     public static void main(String[] args) throws Exception {
         parseCommandline(args);
         if(!validateArguments()) {
-            usage();
-            System.exit(1);
+            usage(1);
         }
         if(printConfig) {
             printConfiguration();
+            System.exit(0);
         }
         if(collector) {
             Collector.startCollector();
@@ -61,17 +64,17 @@ public class STAut {
         if(inputFile != null) {
             Stadium lerkendal = new Stadium("Lerkendal");
             if(isCompressedXML(inputFile)) {
-                System.out.println("Treating input file as base64 encoded and compressed data");
+                info("Treating input file as base64 encoded and compressed data");
                 String decoded = AvailabilityDecoder.decode(inputFile);
                 if(outputDir != null) {
                     writeDecodedOutput(decoded, new File(outputDir, inputFile.getName()));
                 }
                 AvailabilityParser.parse(decoded, lerkendal);
             } else if (isDecodedXML(inputFile)) {
-                System.out.println("Treating input file as decoded and uncompressed data");
+                info("Treating input file as decoded and uncompressed data");
                 AvailabilityParser.parse(inputFile, lerkendal);
             } else {
-                System.err.println("Cannot recognize data format of input file: " + inputFile);
+                error("Cannot recognize data format of input file: " + inputFile);
                 System.exit(1);
             }
             stadiums.add(lerkendal);
@@ -101,26 +104,43 @@ public class STAut {
                 stadium.dump();
             }
             if(reportSectionData) {
-                stadium.reportSectionSummary();
+                if(sectionName != null) {
+                    stadium.reportSectionSummary(sectionName);
+                } else {
+                    stadium.reportSectionSummary();
+                }
             }
             if(reportTicketData) {
-                stadium.reportTicketSummary();
+                if(ticketType != null) {
+                    stadium.reportTicketSummary(ticketType);
+                } else {
+                    stadium.reportTicketSummary();
+                }
             }
             if(reportSummary) {
                 stadium.reportSummary();
+            }
+            if(reportSold) {
+                stadium.reportSold();
+            }
+            if(reportHold) {
+                stadium.reportHold();
+            }
+            if(reportOpen) {
+                stadium.reportOpen();
             }
         }
     }
     
     private static void writeDecodedOutput(String decoded, File file) throws IOException {
-        System.out.println("Writing decoded data to file: " + file.getAbsolutePath());
+        info("Writing decoded data to file: " + file.getAbsolutePath());
         Files.write(file.toPath(), decoded.getBytes());
     }
     
     private static void parseCommandline(String[] args) {
         if(args.length == 0) {
             // Default behavior
-            usage();
+            usage(0);
             System.exit(0);
         } else {
             for(String arg : args) {
@@ -128,21 +148,17 @@ public class STAut {
                     collector=true;
                 } else if (arg.equals("--config")) {
                     printConfig=true;
+                } else if (arg.equals("--silent")) {
+                    verbose=false;
                 } else if (arg.startsWith("--download")) {
-                    if(arg.equals("--download" )) {
                         download=true;
-                    } else if(arg.startsWith("--download=")) {
-                        download=true;
-                        String mode=arg.split("=")[1];
-                        if(!(mode.equals("next") || mode.equals("all"))) {
-                            System.err.println("Download mode should be either'next' or 'all'");
-                            System.exit(1);
-                        } else {
-                            downloadMode = mode;
-                        }
+                    if(arg.equals("--download-next" )) {
+                        downloadMode = "next";
+                    } else if(arg.equals("--download-all")) {
+                        downloadMode = "all";
                     } else {
-                        System.err.println("Wrong syntax for --download option");
-                        usage();
+                        error("Download option should be either'--download-next' or '--download-all'");
+                        usage(1);
                     }
                 } else if (arg.equals("--dump")) {
                     dumpData=true;
@@ -152,41 +168,58 @@ public class STAut {
                 } else if (arg.startsWith("--output=")) {
                     String output=arg.split("=")[1];
                     outputDir = new File(output);
-                } else if (arg.equals("--report_section_data")) {
+                } else if (arg.equals("--report-section")) {
                     reportSectionData=true;
-                }  else if (arg.equals("--report_summary")) {
+                } else if (arg.startsWith("--report-section=")) {
+                    reportSectionData=true;
+                    sectionName=arg.split("=")[1];
+                }  else if (arg.equals("--report-summary")) {
                     reportSummary=true;
-                }  else if (arg.equals("--report_ticket_data")) {
+                }  else if (arg.equals("--report-ticket")) {
                     reportTicketData=true;
+                }  else if (arg.startsWith("--report-ticket=")) {
+                    reportTicketData=true;
+                    ticketType=arg.split("=")[1];
+                }  else if (arg.equals("--report-sold")) {
+                    reportSold=true;
+                }  else if (arg.equals("--report-hold")) {
+                    reportHold=true;
+                }  else if (arg.equals("--report-open")) {
+                    reportOpen=true;
                 }  else {
                     System.err.println("Unknown argument: '" + arg + "'");
-                    usage();
+                    usage(1);
                 }
                 
             }
         }
     }
     
-    private static void usage() {
+    private static void usage(int code) {
         System.out.println("--collector                 Start the automated data collector");
         System.out.println("--config                    List application configuration data");
-        System.out.println("--download[=<next|all>]     download availability data for next (default) or all active events");
+        System.out.println("--download-next             download availability data for next active event");
+        System.out.println("--download-all              download availability data for all active events");
         System.out.println("--dump                      Dump raw data on availability");
         System.out.println("--input=<file>              Load availability data from input file");
-        System.out.println("--output=<file>             Store decoded availability data in output file");
-        System.out.println("--report_section_data       Print ticket data sorted by stadium section");
-        System.out.println("--report_summary            Print summary report");
-        System.out.println("--report_ticket_data        Print section data sorted by ticket type");
-        System.exit(0);
+        System.out.println("--output=<directory>        Store decoded availability data in output directory");
+        System.out.println("--report-hold               Print data on seats with status 'hold'");
+        System.out.println("--report-open               Print data on seats with status 'open'");
+        System.out.println("--report-section[=<sec>]    Print ticket data sorted by stadium section [for section sec]");
+        System.out.println("--report-sold               Print data on seats with status 'sold'");
+        System.out.println("--report-summary            Print summary report");
+        System.out.println("--report-tickets[=<ETT>]    Print section data sorted by ticket type [for specific ticket type ETT]");
+        System.out.println("--silent                    No information printed, only report data");
+        System.exit(code);
     }
     
     private static boolean validateArguments() {
         if(download && inputFile != null) {
-            System.err.println("Cannot use both --input and --download options for event data.");
+            error("Cannot use both --input and --download options for event data.");
             return false;
         }
         if(dumpData && !(inputFile != null || download)) {
-            System.out.println("--dump specified without --input or --download");
+            error("--dump specified without --input or --download");
             return false;
         }
         return true;
@@ -210,6 +243,20 @@ public class STAut {
         Document document = builder.parse(source);
         return (document.getElementsByTagName(element).getLength() >= 1);
         
+    }
+    
+    protected static void report(String text) {
+        System.out.println(text);
+    }
+    
+    protected static void info(String text) {
+        if(verbose) {
+            System.out.println(text);
+        }
+    }
+    
+    protected static void error(String text) {
+        System.err.println(text);
     }
     
 }

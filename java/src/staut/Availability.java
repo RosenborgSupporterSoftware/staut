@@ -119,7 +119,9 @@ public class Availability implements Comparable {
         if (!(other instanceof Availability)) {
             return false;
         }
-        return (((Availability)other).code.equals(this.code));
+        return (((Availability)other).getBaseTypeInt() == this.getBaseTypeInt() && 
+                ((Availability)other).getSeatFlagInt() == this.getSeatFlagInt() &&
+                ((Availability)other).getQualifierBitsInt() == this.getQualifierBitsInt());
     }
 
     @Override

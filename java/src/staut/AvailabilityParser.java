@@ -34,7 +34,7 @@ public class AvailabilityParser {
     public static void parse(File decodedFile, Stadium stadium) throws Exception {
         DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();
         DocumentBuilder builder = factory.newDocumentBuilder();
-        System.out.println("Parsing: " + decodedFile);
+        STAut.info("Parsing: " + decodedFile);
         Document document = builder.parse(decodedFile);
         parse(document, stadium);
     }
@@ -98,7 +98,7 @@ public class AvailabilityParser {
                 counter++;
             }
         }
-        System.out.println("Parsing done");
+        STAut.info("Parsing done");
     }
     
 }

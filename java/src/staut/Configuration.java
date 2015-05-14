@@ -6,6 +6,7 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
+import java.net.URISyntaxException;
 import java.time.Duration;
 import java.util.Properties;
 
@@ -20,17 +21,27 @@ public class Configuration {
     private final static String PROPERTY_FILE_NAME = "configuration.properties";
     
     private static final Properties properties = new Properties();
-    private static final File propertyFile = new File(PROPERTY_FILE_NAME);
+    
     static {
         load();
     }
     
+    private static File getPropertyFile() {
+        try {
+            return new File(new File(Configuration.class.getProtectionDomain().getCodeSource().getLocation().toURI().getPath()).getParentFile(),PROPERTY_FILE_NAME);
+        } catch (URISyntaxException ex) {
+            STAut.error("Could not find path to jar file");
+            return null;
+        }
+    }
+    
     private static void load() {
-        System.out.println("Loading configuration from " + propertyFile.getAbsolutePath());
-        try (InputStream in = new FileInputStream(propertyFile)) {
+        File propfile = getPropertyFile();
+        STAut.info("Loading configuration from " + propfile.getAbsolutePath());
+        try (InputStream in = new FileInputStream(propfile)) {
             properties.load(in);
         } catch(IOException ioe) {
-            System.err.println("Error loading configuration from " + propertyFile);
+            STAut.error("Error loading configuration from " + propfile);
             ioe.printStackTrace();
         }
     }
@@ -45,7 +56,7 @@ public class Configuration {
     }
     
     private static void save() throws IOException {
-        try (OutputStream out = new FileOutputStream(propertyFile)) {
+        try (OutputStream out = new FileOutputStream(getPropertyFile())) {
             properties.store(out, "Configuration of SeteTellerAutomat");
         }
     }

@@ -41,7 +41,7 @@ public class Section {
     
     public void addSeat(Seat s) throws Exception {
         if(seats.contains(s)) {
-            System.out.println("Seat exists: " + s);
+            STAut.error("Seat exists: " + s);
             throw new Exception("Seat already exists in this section");
         } else {
             s.setSection(this);

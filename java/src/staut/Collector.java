@@ -100,7 +100,7 @@ public class Collector {
     
     public static void download(URL url, File file) throws IOException {
         URLConnection uc = url.openConnection();
-        System.out.println("Downloading into: " + file);
+        STAut.info("Downloading into: " + file);
         try (InputStream in = uc.getInputStream(); OutputStream outStream = new FileOutputStream(file)) {
             int len;
             do {
@@ -112,7 +112,7 @@ public class Collector {
             } while(len != -1);
             outStream.flush();
         }
-        System.out.println("Finished downloading: " + file);
+        STAut.info("Finished downloading: " + file);
     }
     
     public static File generateFileName(File dir, Integer eventId) {

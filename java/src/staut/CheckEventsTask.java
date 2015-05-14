@@ -28,9 +28,9 @@ public class CheckEventsTask implements Runnable {
             // event is over
             if(collect.getValue().cancel(false)) {
                 Collector.activeCollects.remove(collect.getKey());
-                System.out.println("Cancelled collection for id " + collect.getKey());
+                STAut.info("Cancelled collection for id " + collect.getKey());
             } else {
-                System.out.println("Failed to cancel collection for id " + collect.getKey());
+                STAut.error("Failed to cancel collection for id " + collect.getKey());
             }
         });
         // Add new events
@@ -40,8 +40,8 @@ public class CheckEventsTask implements Runnable {
                 if(availabilityURL != null) {
                     startAvailabilityCollection(eventId, availabilityURL);
                 } else {
-                    System.out.println("Failed to find availabilityURL for event ID " + eventId);
-                    System.out.println("Most likely internet sale has not yet started.");
+                    STAut.info("Failed to find availabilityURL for event ID " + eventId);
+                    STAut.info("Most likely internet sale has not yet started.");
                 }
             }
         }
@@ -49,7 +49,7 @@ public class CheckEventsTask implements Runnable {
     
     private void startAvailabilityCollection(Integer eventId, URL availabilityURL) throws Exception {
         Duration rate = Configuration.getCollectAvailabilityPeriod();
-        System.out.println("Starting collection of URL: " + availabilityURL + " every " + rate.toMinutes() + " minutes.");
+        STAut.info("Starting collection of URL: " + availabilityURL + " every " + rate.toMinutes() + " minutes.");
         CollectAvailabilityTask cat = new CollectAvailabilityTask(eventId, availabilityURL);
         ScheduledFuture future = Collector.executor.scheduleAtFixedRate(cat, 0, rate.toMinutes(), TimeUnit.MINUTES);
         Collector.activeCollects.put(eventId, future);
