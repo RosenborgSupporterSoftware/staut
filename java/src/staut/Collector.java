@@ -9,9 +9,9 @@ import java.io.InputStreamReader;
 import java.io.OutputStream;
 import java.net.URL;
 import java.net.URLConnection;
+import java.nio.charset.Charset;
 import java.text.SimpleDateFormat;
 import java.time.Duration;
-import static java.time.OffsetTime.now;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
@@ -35,7 +35,7 @@ public class Collector {
     static Collector collector = new Collector();
     static CheckEventsTask checkEventsTask = new CheckEventsTask();
     static ScheduledThreadPoolExecutor executor = new ScheduledThreadPoolExecutor(5);
-    static Map<Integer,ScheduledFuture> activeCollects = new TreeMap<>();
+    static Map<EventInfo,ScheduledFuture> activeCollects = new TreeMap<>();
     
     private Collector() {
     }
@@ -59,28 +59,29 @@ public class Collector {
         }
     }
     
-    public static List<Integer> findActiveEvents() throws IOException {
+    public static List<EventInfo> findActiveEvents() throws IOException {
         URL url = new URL(LERKENDAL_URL);
         URLConnection uc = url.openConnection();
         InputStreamReader input = new InputStreamReader(uc.getInputStream());
         BufferedReader in = new BufferedReader(input);
         String inputLine;
-        List<Integer> ids = new ArrayList<>();
+        List<EventInfo> ids = new ArrayList<>();
         while ((inputLine = in.readLine()) != null) {
             if(inputLine.contains("button--buy roundedButton") && !inputLine.contains("sesongkort")) {
                 String[] quoteSplit = inputLine.split("\"");
                 String[] slashSplit = quoteSplit[5].split("/");
                 String eventId = slashSplit[slashSplit.length-1];
-                ids.add(new Integer(eventId));
+                ids.add(extractEventInfo(new Integer(eventId)));
             }
         }
         return ids;
     }
     
-    public static URL extractAvailabilityURL(Integer eventId) throws IOException {
+    public static EventInfo extractEventInfo(Integer eventId) throws IOException {
+        EventInfo info = new EventInfo(eventId);
         URL eventPage = new URL(BASE_EVENT_PAGE_URL + eventId);
         URLConnection uc = eventPage.openConnection();
-        InputStreamReader input = new InputStreamReader(uc.getInputStream());
+        InputStreamReader input = new InputStreamReader(uc.getInputStream(), Charset.forName("UTF-8"));
         BufferedReader in = new BufferedReader(input);
         String inputLine;
         while ((inputLine = in.readLine()) != null) {
@@ -89,13 +90,39 @@ public class Collector {
                 int counter=0;
                 for(String prop : colonSplit) {
                     counter++;
-                    if(prop.contains("availabilityURL")) {
-                        return new URL(BASE_BILLETTSERVICE_URL + colonSplit[counter].split("\"")[1].replace("\\", ""));
+                    if(prop.contains("eventName")) {
+                        String name = replaceUnicodeEscapes(colonSplit[counter].split("\"")[1]);
+                        info.setEventName(name);
+                        info.setOpponent(name.split("-")[1].trim());
+                    } else if(prop.contains("availabilityURL")) {
+                        info.setAvailabilityURL(new URL(BASE_BILLETTSERVICE_URL + colonSplit[counter].split("\"")[1].replace("\\", "")));
+                    } else if(prop.contains("mapsellURL")) {
+                        info.setGeometryURL(new URL(BASE_BILLETTSERVICE_URL + colonSplit[counter].split("\"")[1].replace("\\", "")));
+                    } else if (prop.contains("eventDateTime")) {
+                        String[] starttime = colonSplit[counter].split("\"")[1].split(",")[1].trim().split(" ");
+                        info.setEventDate(starttime[0].trim());
+                        info.setEventTime(starttime[starttime.length-1].trim() + ":" + colonSplit[counter+1].split("\"")[0]);
                     }
                 }
             }
         }
-        return null;
+        return info;
+    }
+    
+    private static String replaceUnicodeEscapes(String orig) {
+//        æ = \u00E6
+//        Æ = \u00C6
+//        ø = \u00F8
+//        Ø = \u00D8
+//        å = \u00E5
+//        Å = \u00D5
+        String ret = orig.replace("\\u00e6", "æ");
+        ret = ret.replace("\\u00c6", "Æ");
+        ret = ret.replace("\\u00f8", "ø");
+        ret = ret.replace("\\u00d8", "Ø");
+        ret = ret.replace("\\u00e5", "å");
+        ret = ret.replace("\\u00d5", "Å");
+        return ret;
     }
     
     public static void download(URL url, File file) throws IOException {
@@ -115,9 +142,9 @@ public class Collector {
         STAut.info("Finished downloading: " + file);
     }
     
-    public static File generateFileName(File dir, Integer eventId) {
+    public static File generateFileName(File dir, EventInfo info) {
         Date now = new Date();
-        return new File(dir, eventId + "_" + dateFormat.format(now) + ".xml");
+        return new File(dir, info.getEventId() + "_" + info.getOpponent() + "_" + dateFormat.format(now) + ".xml");
     }
     
 }

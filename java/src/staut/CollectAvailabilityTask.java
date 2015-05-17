@@ -1,36 +1,66 @@
 package staut;
 
+import java.io.BufferedWriter;
 import java.io.File;
+import java.io.FileWriter;
 import java.io.IOException;
-import java.net.URL;
 import java.util.TimerTask;
 
 /**
  * Thread that periodically downloads availability data for a specific event.
  */
 public class CollectAvailabilityTask extends TimerTask {
-    private final URL availabilityURL;
-    private final Integer eventId;
+    private final EventInfo info;
     
-    public CollectAvailabilityTask(Integer eventId, URL availabilityURL) {
-        this.availabilityURL = availabilityURL;
-        this.eventId = eventId;
+    public CollectAvailabilityTask(EventInfo info) {
+        this.info = info;
+    }
+    
+    private File getArchiveDirectory() {
+        return new File(Configuration.getArchiveDirectory(), info.getEventId() + "_" + info.getOpponent() + "_" + info.getSeason());
+    }
+    
+    public void writeEventInfo() {
+        getArchiveDirectory().mkdirs();
+        // Store the event info into a separate file
+        File eventInfo = new File(getArchiveDirectory(), "eventinfo.properties");
+        if(eventInfo.exists()) {
+            STAut.info("File with event info already exists: " + eventInfo);
+            return;
+        }
+        try (BufferedWriter writer = new BufferedWriter(new FileWriter(eventInfo))) {
+            writer.write("eventname="+ info.getEventName());
+            writer.newLine();
+            writer.write("eventid=" + info.getEventId());
+            writer.newLine();
+            writer.write("opponent=" + info.getOpponent());
+            writer.newLine();
+            writer.write("eventdate=" + info.getEventDate());
+            writer.newLine();
+            writer.write("eventtime=" + info.getEventTime());
+            writer.newLine();
+            writer.write("availabilityurl=" + info.getAvailabilityURL());
+            writer.newLine();
+            writer.write("geometryurl=" + info.getGeometryURL());
+            writer.newLine();
+        } catch (IOException ioe) {
+            STAut.error("Problem writing event info to file: " + eventInfo);
+            ioe.printStackTrace();
+        }
     }
     
     @Override
     public void run() {
         try {
-            downloadAvailability(availabilityURL);
+            downloadAvailability(info);
         } catch (IOException ex) {
             ex.printStackTrace();
         }
     }
     
-    private void downloadAvailability(URL url) throws IOException {
-        File dir = new File(Configuration.getArchiveDirectory(), eventId.toString());
-        dir.mkdirs();
-        File xmlFile = Collector.generateFileName(dir, eventId);
-        Collector.download(url, xmlFile);
+    private void downloadAvailability(EventInfo info) throws IOException {
+        File xmlFile = Collector.generateFileName(getArchiveDirectory(), info);
+        Collector.download(info.getAvailabilityURL(), xmlFile);
     }
     
 }

@@ -79,16 +79,16 @@ public class STAut {
             }
             stadiums.add(lerkendal);
         } else if(download) {
-            List<Integer> eventIds = Collector.findActiveEvents();
-            eventIds.sort(null);
-            for(Integer id : eventIds) {
+            List<EventInfo> infos = Collector.findActiveEvents();
+            infos.sort(null);
+            for(EventInfo info : infos) {
                 Stadium lerkendal = new Stadium("Lerkendal");
-                URL availabilityURL = Collector.extractAvailabilityURL(id);
-                File tmpFile = File.createTempFile(id.toString(), null);
+                URL availabilityURL = info.getAvailabilityURL();
+                File tmpFile = File.createTempFile(info.getEventId().toString(), null);
                 Collector.download(availabilityURL, tmpFile);
                 String decoded = AvailabilityDecoder.decode(tmpFile);
                 if(outputDir != null) {
-                    File file = Collector.generateFileName(outputDir, id);
+                    File file = Collector.generateFileName(outputDir, info);
                     writeDecodedOutput(decoded, file);
                 }
                 AvailabilityParser.parse(decoded, lerkendal);
