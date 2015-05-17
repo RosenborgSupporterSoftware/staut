@@ -1,8 +1,8 @@
 package staut;
 
-import java.net.URL;
 import java.time.Duration;
 import java.util.List;
+import java.util.Map.Entry;
 import java.util.concurrent.ScheduledFuture;
 import java.util.concurrent.TimeUnit;
 
@@ -22,37 +22,41 @@ public class CheckEventsTask implements Runnable {
     }
     
     private void updateEventCollects() throws Exception {
-        List<Integer> ids = Collector.findActiveEvents();
+        List<EventInfo> infos = Collector.findActiveEvents();
         // Remove expired events
-        Collector.activeCollects.entrySet().stream().filter((collect) -> (!ids.contains(collect.getKey()))).forEach((collect) -> {
+        STAut.info("Updating event collections.");
+        for(Entry<EventInfo,ScheduledFuture> event : Collector.activeCollects.entrySet()) {
+            EventInfo info = event.getKey();
+            if(!infos.contains(info)) {
             // event is over
-            if(collect.getValue().cancel(false)) {
-                Collector.activeCollects.remove(collect.getKey());
-                STAut.info("Cancelled collection for id " + collect.getKey());
-            } else {
-                STAut.error("Failed to cancel collection for id " + collect.getKey());
-            }
-        });
-        // Add new events
-        for(Integer eventId : ids) {
-            if(!Collector.activeCollects.containsKey(eventId)) {
-                URL availabilityURL = Collector.extractAvailabilityURL(eventId);
-                if(availabilityURL != null) {
-                    startAvailabilityCollection(eventId, availabilityURL);
+                if(event.getValue().cancel(false)) {
+                    Collector.activeCollects.remove(info);
+                    STAut.info("Cancelled collection for event " + info);
                 } else {
-                    STAut.info("Failed to find availabilityURL for event ID " + eventId);
+                    STAut.error("Failed to cancel collection for event " + info);
+                }
+            }
+        }
+        // Add new events
+        for(EventInfo info : infos) {
+            if(!Collector.activeCollects.containsKey(info)) {
+                if(info.getAvailabilityURL() != null) {
+                    startAvailabilityCollection(info);
+                } else {
+                    STAut.info("Failed to find availabilityURL for event " + info);
                     STAut.info("Most likely internet sale has not yet started.");
                 }
             }
         }
     }
     
-    private void startAvailabilityCollection(Integer eventId, URL availabilityURL) throws Exception {
+    private void startAvailabilityCollection(EventInfo info) throws Exception {
         Duration rate = Configuration.getCollectAvailabilityPeriod();
-        STAut.info("Starting collection of URL: " + availabilityURL + " every " + rate.toMinutes() + " minutes.");
-        CollectAvailabilityTask cat = new CollectAvailabilityTask(eventId, availabilityURL);
+        STAut.info("Starting collection of URL: " + info.getAvailabilityURL() + " every " + rate.toMinutes() + " minutes.");
+        CollectAvailabilityTask cat = new CollectAvailabilityTask(info);
+        cat.writeEventInfo();
         ScheduledFuture future = Collector.executor.scheduleAtFixedRate(cat, 0, rate.toMinutes(), TimeUnit.MINUTES);
-        Collector.activeCollects.put(eventId, future);
+        Collector.activeCollects.put(info, future);
     }
     
 }
