@@ -66,35 +66,31 @@ public class Availability implements Comparable {
     }
     
     public boolean isSoldOrHold() {
-        if(isSold() || isHold()) {
-            return true;
-        } else {
-            return false;
-        }
+        return isSold() || isHold();
     }
     
     public boolean isSold() {
-        if(!isOpen() && !isHold()) {
-            return true;
-        } else {
-            return false;
-        }
+        return getBaseTypeInt() == 1 && 
+                getQualifierBitsInt() >= 0x400 &&
+                getQualifierBitsInt() <=  0x600;
     }
     
     public boolean isHold() {
-        if(getBaseTypeInt() == 1 && getQualifierBitsInt() == 8) {
-            return true;
-        } else {
-            return false;
-        }
+        return getBaseTypeInt() == 1 && 
+                getQualifierBitsInt() >= 0x00 &&
+                getQualifierBitsInt() <=  0x30;
     }
     
     public boolean isOpen() {
-        if(getBaseTypeInt() == 0 || getBaseTypeInt() == 31) {
-            return true;
-        } else {
-            return false;
-        }
+        return getBaseTypeInt() == 0 || getBaseTypeInt() == 31;
+    }
+    
+    public boolean isKnown() {
+        return isOpen() || isSoldOrHold();
+    }
+    
+    public boolean isUnknown() {
+        return !isKnown();
     }
     
     /**
@@ -102,13 +98,8 @@ public class Availability implements Comparable {
      * @return 
      */
     public boolean isSeasonTicket() {
-        // TODO: This was just a guess, need to find correct criteria for
-        // season tickets.
-        if(Integer.parseInt(getQualifierBits().substring(0, 1)) == 4) {
-            return true;
-        } else {
-            return false;
-        }
+        return false;
+        // TODO: Get details from OrionPax here
     }
     
     @Override

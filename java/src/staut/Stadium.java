@@ -71,14 +71,18 @@ public class Stadium {
         int sold = 0;
         int hold = 0;
         int open = 0;
+        int seasonTickets = 0;
         for(Section section : sections.values()) {
             sold+=section.countSold();
             hold+=section.countHold();
             open+=section.countOpen();
             seats+=section.countSeats();
+            seasonTickets+=section.countSeasonTickets();
         }
         STAut.report("Total seats: " + seats);
         STAut.report("Total sold: " + sold);
+        STAut.report("  Total regular tickets: " + (sold-seasonTickets));
+        STAut.report("  Total season tickets: " + seasonTickets);
         STAut.report("Total hold: " + hold);
         STAut.report("Total open: " + open);
     }
