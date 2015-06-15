@@ -3,38 +3,38 @@
     public enum SeatStatus
     {
         /// <summary>
-        /// Ukjent status - vi vet virkelig ikke hva den betyr
-        /// </summary>
-        Unknown = 0,
-
-        /// <summary>
         /// Setet er til salgs
         /// </summary>
-        AvailableForPurchase,
+        AvailableForPurchase = 0,
 
         /// <summary>
         /// Noen lukter på å kjøpe plassen
         /// </summary>
-        HeldByTicketMasterApplication,
+        HeldByTicketMasterApplication = 30,
 
         /// <summary>
         /// Noen har sesongkort på setet
         /// </summary>
-        SeasonTicket,
+        SeasonTicket = 1,
 
         /// <summary>
         /// Noen har kjøpt setet for gjeldende kamp
         /// </summary>
-        Sold,
+        Sold = 2,
 
         /// <summary>
         /// Setet er holdt av til ett eller annet formål
         /// </summary>
-        Reserved,
+        Reserved = 5,
 
         /// <summary>
         /// Setet er utilgjengelig, uten at vi vet om det er solgt, reservert eller annet.
         /// </summary>
-        Unavailable
-    }
+        Unavailable = 10,
+
+            /// <summary>
+        /// Ukjent status - vi vet virkelig ikke hva den betyr
+        /// </summary>
+        Unknown = 20,
+}
 }
