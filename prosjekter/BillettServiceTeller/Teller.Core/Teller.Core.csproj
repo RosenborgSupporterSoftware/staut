@@ -54,11 +54,13 @@
     <Compile Include="BillettService\BillettServiceSete.cs" />
     <Compile Include="BillettService\BillettServiceSeteLeser.cs" />
     <Compile Include="BillettService\BillettServiceXmlFile.cs" />
+    <Compile Include="Entities\BillettServiceEvent.cs" />
     <Compile Include="BillettService\SeatChange.cs" />
     <Compile Include="BillettService\SeatDiffGenerator.cs" />
     <Compile Include="BillettService\SeatStatusClassifier.cs" />
     <Compile Include="BillettService\SeatSummary.cs" />
     <Compile Include="Entities\EttCode.cs" />
+    <Compile Include="Entities\Measurement.cs" />
     <Compile Include="Entities\Rad.cs" />
     <Compile Include="Entities\Sete.cs" />
     <Compile Include="Entities\StadiumPosition.cs" />
