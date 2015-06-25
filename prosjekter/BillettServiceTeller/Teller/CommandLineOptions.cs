@@ -10,6 +10,7 @@ namespace Teller
     {
         #region Public properties
 
+        public string[] Args { get; set; }
         public string InputFile { get; private set; }
         public string CsvOutputFile { get; private set; }
         public string LedigTextFile { get; private set; }
@@ -65,10 +66,11 @@ namespace Teller
 
         public CommandLineOptions(string[] args)
         {
+            Args = args;
             for (var i = 0; i < args.Length; i++)
             {
                 if (args[i].StartsWith("-i")) // Sett inputFile
-                    InputFile = args[i].Length > 2 ? args[i].Substring(2) : args[++i];
+                    InputFile = args[i].Length > 2 ? args[i].Substring(2) : args[i+1];
 
                 if (args[i].StartsWith("-c")) // Output CSV
                     CsvOutputFile = args[i].Length > 2 ? args[i].Substring(2) : args[++i];
