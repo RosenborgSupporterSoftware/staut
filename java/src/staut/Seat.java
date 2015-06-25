@@ -35,6 +35,10 @@ public class Seat implements Comparable {
         return availability.isSold();
     }
     
+    public boolean isSeasonTicket() {
+        return availability.isSeasonTicket();
+    }
+    
     public boolean isHold() {
         return availability.isHold();
     }

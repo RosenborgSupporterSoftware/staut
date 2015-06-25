@@ -8,6 +8,10 @@ import java.net.URL;
 import java.nio.file.Files;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
+import java.util.Map.Entry;
+import java.util.SortedMap;
+import java.util.TreeMap;
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
 import org.w3c.dom.Document;
@@ -31,9 +35,12 @@ public class STAut {
     private static boolean dumpData = false;
     private static boolean collector = false;
     private static boolean download = false;
+    private static boolean reportDiff = false;
+    private static boolean reportIntersection = false;
     private static boolean reportSectionData = false;
     private static boolean reportSummary = false;
     private static boolean reportTicketData = false;
+    private static boolean reportSeasonTickets = false;
     private static boolean reportOpen = false;
     private static boolean reportSold = false;
     private static boolean reportHold = false;
@@ -78,7 +85,8 @@ public class STAut {
                 System.exit(1);
             }
             stadiums.add(lerkendal);
-        } else if(download) {
+        }
+        if(download) {
             List<EventInfo> infos = Collector.findActiveEvents();
             infos.sort(null);
             for(EventInfo info : infos) {
@@ -117,6 +125,9 @@ public class STAut {
                     stadium.reportTicketSummary();
                 }
             }
+            if(reportSeasonTickets) {
+                stadium.reportSeasonTickets();
+            }
             if(reportSummary) {
                 stadium.reportSummary();
             }
@@ -129,6 +140,14 @@ public class STAut {
             if(reportOpen) {
                 stadium.reportOpen();
             }
+        }
+        
+        if(reportDiff) {
+            reportDiff();
+        }
+        
+        if(reportIntersection) {
+            reportIntersection();
         }
     }
     
@@ -168,6 +187,10 @@ public class STAut {
                 } else if (arg.startsWith("--output=")) {
                     String output=arg.split("=")[1];
                     outputDir = new File(output);
+                }  else if (arg.equals("--report-diff")) {
+                    reportDiff=true;
+                }  else if (arg.equals("--report-intersection")) {
+                    reportIntersection=true;
                 } else if (arg.equals("--report-section")) {
                     reportSectionData=true;
                 } else if (arg.startsWith("--report-section=")) {
@@ -175,6 +198,8 @@ public class STAut {
                     sectionName=arg.split("=")[1];
                 }  else if (arg.equals("--report-summary")) {
                     reportSummary=true;
+                }  else if (arg.equals("--report-season-tickets")) {
+                    reportSeasonTickets=true;
                 }  else if (arg.equals("--report-ticket")) {
                     reportTicketData=true;
                 }  else if (arg.startsWith("--report-ticket=")) {
@@ -203,21 +228,20 @@ public class STAut {
         System.out.println("--dump                      Dump raw data on availability");
         System.out.println("--input=<file>              Load availability data from input file");
         System.out.println("--output=<directory>        Store decoded availability data in output directory");
+        System.out.println("--report-diff               Print difference in ticktets for two event files");
+        System.out.println("--report-intersection       Print intersection in tickets for two event files");
         System.out.println("--report-hold               Print data on seats with status 'hold'");
         System.out.println("--report-open               Print data on seats with status 'open'");
+        System.out.println("--report-season-tickets     Print data on season tickets");
         System.out.println("--report-section[=<sec>]    Print ticket data sorted by stadium section [for section sec]");
         System.out.println("--report-sold               Print data on seats with status 'sold'");
         System.out.println("--report-summary            Print summary report");
-        System.out.println("--report-tickets[=<ETT>]    Print section data sorted by ticket type [for specific ticket type ETT]");
+        System.out.println("--report-ticket[=<ETT>]     Print section data sorted by ticket type [for specific ticket type ETT]");
         System.out.println("--silent                    No information printed, only report data");
         System.exit(code);
     }
     
     private static boolean validateArguments() {
-        if(download && inputFile != null) {
-            error("Cannot use both --input and --download options for event data.");
-            return false;
-        }
         if(dumpData && !(inputFile != null || download)) {
             error("--dump specified without --input or --download");
             return false;
@@ -257,6 +281,61 @@ public class STAut {
     
     protected static void error(String text) {
         System.err.println(text);
+    }
+    
+    private static void reportDiff() throws Exception {
+        if(!(stadiums.size() > 1)) {
+            error("Not enough datasets for comparison: " + stadiums.size());
+            usage(1);
+        }
+        Stadium oldest = stadiums.get(0);
+        Stadium next = stadiums.get(1);
+        info("Comparing oldest dataset to later for " + stadiums.size() + " datasets");
+        Map<Diff, Integer> total = new TreeMap<>();
+        for(Section section: oldest.getSections()) {
+            info("Section " + section.toString());
+            Map<Diff, Integer> diffs = section.diff(next.getSection(section.getId()));
+            for(Entry<Diff,Integer> diff : diffs.entrySet()) {
+                System.out.println(diff.getKey() + ": " + diff.getValue());
+                if(!total.containsKey(diff.getKey())) {
+                    total.put(diff.getKey(), diff.getValue());
+                } else {
+                    total.put(diff.getKey(), total.get(diff.getKey()) + diff.getValue());
+                }
+            }
+        }
+        System.out.println("Total changed seats:");
+        for(Entry<Diff,Integer> diff : total.entrySet()) {
+            System.out.println(diff.getKey() + ": " + diff.getValue());
+        }
+    }
+    
+    private static void reportIntersection() throws Exception {
+        if(!(stadiums.size() > 1)) {
+            error("Not enough datasets for comparison: " + stadiums.size());
+            usage(1);
+        }
+        Stadium oldest = stadiums.get(0);
+        Stadium next = stadiums.get(1);
+        info("Comparing oldest dataset to later for " + stadiums.size() + " datasets");
+        SortedMap<Availability, Integer> total = new TreeMap<>();
+        for(Section section: oldest.getSections()) {
+            info("Section " + section.toString());
+            SortedMap<Availability, Integer> tickets = section.intersection(next.getSection(section.getId()));
+            for(Entry<Availability,Integer> ticket : tickets.entrySet()) {
+                System.out.println(ticket.getKey() + ": " + ticket.getValue());
+                if(!total.containsKey(ticket.getKey())) {
+                    total.put(ticket.getKey(), ticket.getValue());
+                } else {
+                    total.put(ticket.getKey(), total.get(ticket.getKey()) + ticket.getValue());
+                }
+            }
+        }
+        
+        System.out.println("Total unchanged seats:");
+        for(Entry<Availability,Integer> ticket : total.entrySet()) {
+            System.out.println(ticket.getKey() + ": " + ticket.getValue());
+        }
     }
     
 }

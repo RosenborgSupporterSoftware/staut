@@ -17,7 +17,7 @@ public class CollectAvailabilityTask extends TimerTask {
     }
     
     private File getArchiveDirectory() {
-        return new File(Configuration.getArchiveDirectory(), info.getEventId() + "_" + info.getOpponent() + "_" + info.getSeason());
+        return new File(Configuration.getArchiveDirectory(), info.getSeason() + "_" + info.getEventId() + "_" + info.getOpponent());
     }
     
     public void writeEventInfo() {

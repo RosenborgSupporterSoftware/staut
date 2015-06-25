@@ -3,6 +3,7 @@ package staut;
 import java.util.HashSet;
 import java.util.Map;
 import java.util.Set;
+import java.util.SortedMap;
 import java.util.TreeMap;
 
 /**
@@ -12,7 +13,7 @@ public class Section {
     
     private String id = null;
     private String name = null;
-    private Set<Seat> seats = new HashSet<>();
+    private final Set<Seat> seats = new HashSet<>();
     
     public Section(String id) {
         this.id = id;
@@ -86,6 +87,12 @@ public class Section {
         return count;
     }
     
+    public int countSeasonTickets() {
+        int count = 0;
+        count = seats.stream().filter((seat) -> (seat.isSeasonTicket())).map((_item) -> 1).reduce(count, Integer::sum);
+        return count;
+    }
+    
     @Override
     public String toString() {
         if (name != null) {
@@ -95,5 +102,37 @@ public class Section {
         }
     }
     
+    public Map<Diff,Integer> diff(Section other) throws Exception {
+        Map<Diff,Integer> diffs = new TreeMap<>();
+        for(Seat seat : seats) {
+            Availability oldTicket = seat.getAvailability();
+            Availability newTicket = other.getSeat(seat.getRow(), seat.getPlace()).getAvailability();
+            if(!oldTicket.equals(newTicket)) {
+                Diff diff = new Diff(oldTicket,newTicket);
+                STAut.report("DIFF IDENTIFIED " + this + ": " + seat + " " + diff);
+                if(diffs.containsKey(diff)) {
+                    diffs.put(diff, diffs.get(diff) + 1);
+                } else {
+                    diffs.put(diff, 1);
+                }
+            }
+        }
+        return diffs;
+    }
     
+    public SortedMap<Availability, Integer> intersection(Section other) throws Exception {
+        SortedMap<Availability, Integer> tickets = new TreeMap<>();
+        for(Seat seat : seats) {
+            Availability oldTicket = seat.getAvailability();
+            Availability newTicket = other.getSeat(seat.getRow(), seat.getPlace()).getAvailability();
+            if(oldTicket.equals(newTicket)) {
+                if(tickets.containsKey(oldTicket)) {
+                    tickets.put(oldTicket, tickets.get(oldTicket) + 1);
+                } else {
+                    tickets.put(oldTicket, 1);
+                }
+            }
+        }
+        return tickets;
+    }
 }

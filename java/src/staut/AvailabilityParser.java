@@ -61,9 +61,14 @@ public class AvailabilityParser {
                     sectionName = sectionDetail.getTextContent();
                 }
                 if(sectionDetail.getNodeName().equals("Row_names")) {
-                    String rowString = sectionDetail.getFirstChild().getTextContent();
-                    if(!rowString.isEmpty()) {
-                        row = Integer.parseInt(rowString);
+                    NodeList rows = sectionDetail.getChildNodes();
+                    for(int r=0 ; r<rows.getLength() ; r++) {
+                        if(rows.item(r).getNodeName().equals("E")) {
+                            String rowString = rows.item(r).getTextContent().trim();
+                            if(!rowString.isEmpty()) {
+                                row = Integer.parseInt(rowString);
+                            }
+                        }
                     }
                 }
                 if(sectionDetail.getNodeName().equals("Seat_names")) {
