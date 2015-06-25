@@ -1,5 +1,6 @@
 ﻿using System;
 using System.IO;
+using Fclp;
 
 namespace Teller
 {
@@ -60,6 +61,8 @@ namespace Teller
         /// </summary>
         public bool OutputCountFile { get { return !String.IsNullOrWhiteSpace(CountFile); } }
 
+        public bool Hate { get; set; }
+
         #endregion
 
         #region Constructor
@@ -67,35 +70,29 @@ namespace Teller
         public CommandLineOptions(string[] args)
         {
             Args = args;
-            for (var i = 0; i < args.Length; i++)
-            {
-                if (args[i].StartsWith("-i")) // Sett inputFile
-                    InputFile = args[i].Length > 2 ? args[i].Substring(2) : args[i+1];
+            
+            var parser = new FluentCommandLineParser();
 
-                if (args[i].StartsWith("-c")) // Output CSV
-                    CsvOutputFile = args[i].Length > 2 ? args[i].Substring(2) : args[++i];
-
-                if (args[i].StartsWith("-l")) // Output tekstfil med ledige plasser
-                    LedigTextFile = args[i].Length > 2 ? args[i].Substring(2) : args[++i];
-
-                if (args[i].StartsWith("-o")) // Output tekstfil med opptatte plasser
-                    OpptattTextFile = args[i].Length > 2 ? args[i].Substring(2) : args[++i];
-
-                if (args[i].StartsWith("-x")) // Output dekodet xml-fil
-                    XmlOutputFile = args[i].Length > 2 ? args[i].Substring(2) : args[++i];
-                if (args[i].StartsWith("-s")) // Rapporter setestatus
-                    SeatQuery = args[i].Length > 2 ? args[i].Substring(2) : args[++i];
-                if (args[i].StartsWith("-t")) // Opptelling!
+            parser.Setup<string>('i').Callback(val => { InputFile = val; });
+            parser.Setup<string>('c').Callback(val => { CsvOutputFile = val; });
+            parser.Setup<string>('l').Callback(val => { LedigTextFile = val; });
+            parser.Setup<string>('o').Callback(val => { OpptattTextFile = val; });
+            parser.Setup<string>('x').Callback(val => { XmlOutputFile = val; });
+            parser.Setup<string>('s').Callback(val => { SeatQuery = val; });
+            parser.Setup<bool>('a').Callback(val => { DumpArgs = val; });
+            parser.Setup<bool>('h').Callback(val => { Hate = val; });
+            parser
+                .Setup<string>('t')
+                .Callback(val =>
                 {
                     PrintCountSummary = true;
-                    if (args[i].Length > 2)
-                        CountFile = args[i].Substring(2);
-                    else if (args.Length > i + 1 && !args[i + 1].StartsWith("-"))
-                        CountFile = args[++i];
-                }
-                if (args[i].StartsWith("-a")) // Dump argumentinfo
-                    DumpArgs = true;
-            }
+                    CountFile = val;
+                })
+                .SetDefault(string.Empty);
+
+            
+
+            parser.Parse(args);
         }
 
         #endregion

@@ -43,8 +43,8 @@ namespace Teller
                     Print("Manglende eller ugyldig inputfil");
                 }
             }
-
-            Console.ReadKey();
+            
+            if (_opts.Hate) PrintHate();
         }
 
         private void PrintHeader()
@@ -90,6 +90,14 @@ namespace Teller
             Console.Write(summary);
 
             _outputsUsed++;
+        }
+
+        private void PrintHate()
+        {
+            Console.WriteLine("Vi hate Molde og Lillestrøm.");
+            Console.WriteLine("Vi hate Molde og Lillestrøm.");
+            Console.WriteLine("Vi hate Molde og Lillestrøm.");
+            Console.WriteLine("Men vi ælske RBK.");
         }
 
         private void Print(string text, bool predicate = true)
