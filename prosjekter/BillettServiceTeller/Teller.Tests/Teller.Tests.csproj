@@ -59,6 +59,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="BillettService\BillettServiceSeteLeserTests.cs" />
+    <Compile Include="BillettService\MiscellaneousDataQueries.cs" />
     <Compile Include="BillettService\SeatDiffGeneratorTests.cs" />
     <Compile Include="Entities\EttCodeTests.cs" />
     <Compile Include="Entities\StadiumPositionTests.cs" />

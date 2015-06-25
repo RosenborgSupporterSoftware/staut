@@ -57,6 +57,5 @@ namespace Teller.Tests.BillettService
             // Assert
             res.Count.Should().NotBe(0);
         }
-
     }
 }
