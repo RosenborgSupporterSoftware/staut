@@ -20,7 +20,7 @@ namespace Teller.Tests.Infrastructure
             var reader = new BillettServiceReader();
             
             // Act
-            var info = reader.ReadData(@"D:\temp\Billett-telling\TLD0415-2015,NO-438515-050515-0654.xml");
+            //var info = reader.ReadData(@"D:\temp\Billett-telling\TLD0415-2015,NO-438515-050515-0654.xml");
 
             // Assert
         }
