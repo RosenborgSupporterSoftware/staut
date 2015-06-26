@@ -1,6 +1,7 @@
 package staut;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
 import java.util.Objects;
@@ -98,8 +99,42 @@ public class Availability implements Comparable {
      * @return 
      */
     public boolean isSeasonTicket() {
-        return false;
-        // TODO: Get details from OrionPax here
+        List<Integer> ticketList = Arrays.asList(new Integer[]{
+            // Liste hentet ut ved å finne koder 0x400 - 0x600 fra to siste kamper 2015 før de er lagt ut for salg
+            0x4C7,  // Sesongkort gull voksen (jubajuba m.fl.)
+            0x596,
+            0x4CF,  // Sesongkort - Kjernen?
+            0x4C8,  // Sesongkort voksen "svart" (FA) kontant (RoarO)
+            0x5C2,
+            0x4CD,  // Sesongkort familierabatt (hoboj0e)
+            0x4CB,  // Sesongkort studentrabatt normal betaling (Kjello)
+            0x4CE,
+            0x4C9,  // Sesongkort hvit voksen
+            0x590,
+            0x4CC,  // Sesongkort hvit honnør/barn/student
+            0x5C8,
+            0x5C3,
+            0x4CA,  // Sesongkort gull honnør/barn/student
+            0x501,
+            0x592,
+            0x591,  // Sponsor-sesongkort o.l.
+            0x4FA,
+            0x4FB,  // Sesongkort "svart" (Brego)
+            0x500,
+            0x4FF,
+            0x4D0,
+            0x52C,
+            0x595,
+            0x4FD,  // Sesongkort studentrabatt avtalegiro (Kjello)
+            0x4FC,  // Sesongkort (vegardj)
+            0x502,
+            0x4FE,
+            0x593,
+            0x5C4,
+            0x5CC,
+            0x4F9
+        });
+        return ticketList.contains(getQualifierBitsInt());
     }
     
     @Override
