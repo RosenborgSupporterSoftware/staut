@@ -87,6 +87,12 @@ public class Section {
         return count;
     }
     
+    public int countUnknown() {
+        int count = 0;
+        count = seats.stream().filter((seat) -> (seat.isUnknown())).map((_item) -> 1).reduce(count, Integer::sum);
+        return count;
+    }
+    
     public int countSeasonTickets() {
         int count = 0;
         count = seats.stream().filter((seat) -> (seat.isSeasonTicket())).map((_item) -> 1).reduce(count, Integer::sum);

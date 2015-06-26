@@ -72,12 +72,14 @@ public class Stadium {
         int hold = 0;
         int open = 0;
         int seasonTickets = 0;
+        int unknown = 0;
         for(Section section : sections.values()) {
             sold+=section.countSold();
             hold+=section.countHold();
             open+=section.countOpen();
             seats+=section.countSeats();
             seasonTickets+=section.countSeasonTickets();
+            unknown+=section.countUnknown();
         }
         STAut.report("Total seats: " + seats);
         STAut.report("Total sold: " + sold);
@@ -85,6 +87,7 @@ public class Stadium {
         STAut.report("  Total season tickets: " + seasonTickets);
         STAut.report("Total hold: " + hold);
         STAut.report("Total open: " + open);
+        STAut.report("Total unknown: " + unknown);
     }
     
     public void reportSectionSummary() {
@@ -147,6 +150,19 @@ public class Stadium {
             }
         }
         STAut.report("Total: " + totalOpen);
+    }
+    
+    public void reportUnknown() {
+        int totalUnknown = 0;
+        STAut.report("Reporting data on seats with status 'unknown'.");
+        for(Section section: sections.values()) {
+            int unknown = section.countUnknown();
+            if(unknown >0) {
+                totalUnknown += unknown;
+                System.out.println(section.toString() + ": " + unknown);
+            }
+        }
+        STAut.report("Total: " + totalUnknown);
     }
     
     public void reportSold() {

@@ -47,6 +47,10 @@ public class Seat implements Comparable {
         return availability.isOpen();
     }
     
+    public boolean isUnknown() {
+        return availability.isUnknown();
+    }
+    
     @Override
     public boolean equals(Object other) {
         if (this == other) {

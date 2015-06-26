@@ -44,6 +44,7 @@ public class STAut {
     private static boolean reportOpen = false;
     private static boolean reportSold = false;
     private static boolean reportHold = false;
+    private static boolean reportUnknown = false;
     
     private static final List<Stadium> stadiums = new ArrayList<>();
     
@@ -140,6 +141,9 @@ public class STAut {
             if(reportOpen) {
                 stadium.reportOpen();
             }
+            if(reportUnknown) {
+                stadium.reportUnknown();
+            }
         }
         
         if(reportDiff) {
@@ -211,6 +215,8 @@ public class STAut {
                     reportHold=true;
                 }  else if (arg.equals("--report-open")) {
                     reportOpen=true;
+                }  else if (arg.equals("--report-unknown")) {
+                    reportUnknown=true;
                 }  else {
                     System.err.println("Unknown argument: '" + arg + "'");
                     usage(1);
@@ -237,6 +243,7 @@ public class STAut {
         System.out.println("--report-sold               Print data on seats with status 'sold'");
         System.out.println("--report-summary            Print summary report");
         System.out.println("--report-ticket[=<ETT>]     Print section data sorted by ticket type [for specific ticket type ETT]");
+        System.out.println("--report-unkown             Print data on seats with status 'unknown'");
         System.out.println("--silent                    No information printed, only report data");
         System.exit(code);
     }
