@@ -68,8 +68,9 @@ public class Collector {
         List<EventInfo> ids = new ArrayList<>();
         while ((inputLine = in.readLine()) != null) {
             if(inputLine.contains("button--buy roundedButton") && !inputLine.contains("sesongkort")) {
-                String[] quoteSplit = inputLine.split("\"");
-                String[] slashSplit = quoteSplit[5].split("/");
+                String[] hrefSplit = inputLine.split("href=");
+                String[] quoteSplit = hrefSplit[1].split("\"");
+                String[] slashSplit = quoteSplit[1].split("/");
                 String eventId = slashSplit[slashSplit.length-1];
                 ids.add(extractEventInfo(new Integer(eventId)));
             }
