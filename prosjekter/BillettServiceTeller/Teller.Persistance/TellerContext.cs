@@ -20,5 +20,10 @@ namespace Teller.Persistance
         /// </summary>
         public DbSet<Measurement> Measurements { get; set; }
 
+        public TellerContext()
+            : base("STAut")
+        {
+            
+        }
     }
 }
