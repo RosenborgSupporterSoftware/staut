@@ -17,6 +17,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Teller", "Teller\Teller.csp
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Teller.Persistance", "Teller.Persistance\Teller.Persistance.csproj", "{A5B174D5-3BAB-4E5B-AA7F-338B14CB4C5A}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Ingest", "Ingest\Ingest.csproj", "{E601130F-CF8D-4FCB-BB5B-664ADEDF55B9}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -39,6 +41,10 @@ Global
 		{A5B174D5-3BAB-4E5B-AA7F-338B14CB4C5A}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{A5B174D5-3BAB-4E5B-AA7F-338B14CB4C5A}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{A5B174D5-3BAB-4E5B-AA7F-338B14CB4C5A}.Release|Any CPU.Build.0 = Release|Any CPU
+		{E601130F-CF8D-4FCB-BB5B-664ADEDF55B9}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{E601130F-CF8D-4FCB-BB5B-664ADEDF55B9}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{E601130F-CF8D-4FCB-BB5B-664ADEDF55B9}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{E601130F-CF8D-4FCB-BB5B-664ADEDF55B9}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -48,5 +54,6 @@ Global
 		{F8212176-561F-46DF-A4AD-455D5B3504E2} = {4899E008-5953-4094-9C55-F3B838F8EF8C}
 		{47E6E5D5-587E-4E94-BA9F-EA33944099AC} = {D6468D86-C044-4744-BF71-0CAF5625F1EF}
 		{A5B174D5-3BAB-4E5B-AA7F-338B14CB4C5A} = {6894BD97-9861-42B0-9647-3175E9AA0075}
+		{E601130F-CF8D-4FCB-BB5B-664ADEDF55B9} = {D6468D86-C044-4744-BF71-0CAF5625F1EF}
 	EndGlobalSection
 EndGlobal
