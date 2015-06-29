@@ -77,6 +77,9 @@
     <Compile Include="Infrastructure\BillettServiceReader.cs" />
     <Compile Include="Infrastructure\XElementExtensions.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Repository\IEventRepository.cs" />
+    <Compile Include="Repository\IMeasurementRepository.cs" />
+    <Compile Include="Repository\IRepository.cs" />
     <Compile Include="SeatStatus.cs" />
   </ItemGroup>
   <ItemGroup>
