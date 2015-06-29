@@ -15,7 +15,12 @@ namespace Teller.Core.Entities
         /// <summary>
         /// Id på event som denne målingen hører til
         /// </summary>
-        public int EventId { get; set; }
+        public int BillettServiceEventId { get; set; }
+
+        /// <summary>
+        /// Selve event-objektet denne målingen hører til
+        /// </summary>
+        public virtual BillettServiceEvent BillettServiceEvent { get; set; }
 
         /// <summary>
         /// Tidspunktet denne målingen ble foretatt
