@@ -127,6 +127,7 @@ public class STAut {
                 }
             }
             if(reportSeasonTickets) {
+                STAut.info("Season ticket codes: " + Availability.getSeasonTicketCodes());
                 stadium.reportSeasonTickets();
             }
             if(reportSummary) {

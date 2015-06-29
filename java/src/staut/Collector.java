@@ -27,7 +27,7 @@ import java.util.concurrent.TimeUnit;
  */
 public class Collector {
     
-    private static final SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm");
+    private static final SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd'T'HH-mm");
     private static final String BASE_BILLETTSERVICE_URL = "http://www.billettservice.no";
     private static final String BASE_EVENT_PAGE_URL = BASE_BILLETTSERVICE_URL + "/event/";
     private static final String LERKENDAL_URL = BASE_BILLETTSERVICE_URL + "/venue/lerkendal-stadion-trondheim-billetter/TLD/25?attractions=100563";
@@ -94,9 +94,27 @@ public class Collector {
                     if(prop.contains("eventName")) {
                         String name = replaceUnicodeEscapes(colonSplit[counter].split("\"")[1]);
                         info.setEventName(name);
-                        info.setOpponent(name.split("-")[1].trim());
+                        info.setOpponent(name.split("-")[1].trim().split("\\s+")[0]);
                     } else if(prop.contains("availabilityURL")) {
                         info.setAvailabilityURL(new URL(BASE_BILLETTSERVICE_URL + colonSplit[counter].split("\"")[1].replace("\\", "")));
+                        String eventCode = info.getAvailabilityURL().getPath().split("/NO/")[1].split(",")[0];
+                        info.setEventCode(eventCode);
+                        if(eventCode != null && eventCode.length() >=3) {
+                            info.setLocation(eventCode.substring(0, 3));
+                        }
+                        if(eventCode != null && eventCode.length() >=5) {
+                            String part2 = eventCode.substring(3, 5);
+                            if(part2.matches("\\d\\d")) { // Two digits
+                                // This is a league game.
+                                info.setCompetition("LEAGUE");
+                                info.setRound(Integer.parseInt(part2));
+                            } else {
+                                info.setCompetition(eventCode.substring(3, 5));
+                                if(eventCode.length() >=7) {
+                                    info.setRound(Integer.parseInt(eventCode.substring(5,7)));
+                                }
+                            }
+                        }
                     } else if(prop.contains("mapsellURL")) {
                         info.setGeometryURL(new URL(BASE_BILLETTSERVICE_URL + colonSplit[counter].split("\"")[1].replace("\\", "")));
                     } else if (prop.contains("eventDateTime")) {

@@ -17,7 +17,13 @@ public class CollectAvailabilityTask extends TimerTask {
     }
     
     private File getArchiveDirectory() {
-        return new File(Configuration.getArchiveDirectory(), info.getSeason() + "_" + info.getEventId() + "_" + info.getOpponent());
+        return new File(Configuration.getArchiveDirectory(), 
+                info.getSeason() + "_" + 
+                info.getCompetition() + "_" +
+                info.getRound() + "_" +
+                info.getOpponent() + "_" + 
+                info.getEventId()
+        );
     }
     
     public void writeEventInfo() {
@@ -32,6 +38,14 @@ public class CollectAvailabilityTask extends TimerTask {
             writer.write("eventname="+ info.getEventName());
             writer.newLine();
             writer.write("eventid=" + info.getEventId());
+            writer.newLine();
+            writer.write("eventcode=" + info.getEventCode());
+            writer.newLine();
+            writer.write("location=" + info.getLocation());
+            writer.newLine();
+            writer.write("competition=" + info.getCompetition());
+            writer.newLine();
+            writer.write("round=" + info.getRound());
             writer.newLine();
             writer.write("opponent=" + info.getOpponent());
             writer.newLine();

@@ -99,6 +99,10 @@ public class Availability implements Comparable {
      * @return 
      */
     public boolean isSeasonTicket() {
+        return getSeasonTicketCodes().contains(getQualifierBitsInt());
+    }
+    
+    public static List<Integer> getSeasonTicketCodes() {
         List<Integer> ticketList = Arrays.asList(new Integer[]{
             // Liste hentet ut ved å finne koder 0x400 - 0x600 fra to siste kamper 2015 før de er lagt ut for salg
             0x4C7,  // Sesongkort gull voksen (jubajuba m.fl.)
@@ -134,7 +138,8 @@ public class Availability implements Comparable {
             0x5CC,
             0x4F9
         });
-        return ticketList.contains(getQualifierBitsInt());
+        ticketList.sort(null);
+        return ticketList;
     }
     
     @Override

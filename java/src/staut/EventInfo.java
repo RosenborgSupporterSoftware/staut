@@ -11,7 +11,11 @@ public class EventInfo implements Comparable {
     private String eventName;
     private String eventDate;
     private String eventTime;
+    private String location;
+    private String competition;
+    private int round;
     private String opponent;
+    private String eventCode;
     private URL availabilityURL;
     private URL geometryURL;
     
@@ -150,6 +154,62 @@ public class EventInfo implements Comparable {
         } else {
             return false;
         }
+    }
+
+    /**
+     * @return the eventCode
+     */
+    public String getEventCode() {
+        return eventCode;
+    }
+
+    /**
+     * @param eventCode the eventCode to set
+     */
+    public void setEventCode(String eventCode) {
+        this.eventCode = eventCode;
+    }
+
+    /**
+     * @return the location
+     */
+    public String getLocation() {
+        return location;
+    }
+
+    /**
+     * @param location the location to set
+     */
+    public void setLocation(String location) {
+        this.location = location;
+    }
+
+    /**
+     * @return the competition
+     */
+    public String getCompetition() {
+        return competition;
+    }
+
+    /**
+     * @param competition the competition to set
+     */
+    public void setCompetition(String competition) {
+        this.competition = competition;
+    }
+
+    /**
+     * @return the round
+     */
+    public int getRound() {
+        return round;
+    }
+
+    /**
+     * @param round the round to set
+     */
+    public void setRound(int round) {
+        this.round = round;
     }
     
 }
