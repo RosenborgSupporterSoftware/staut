@@ -278,17 +278,21 @@ public class STAut {
     }
     
     protected static void report(String text) {
-        System.out.println(text);
+        System.out.println("REPORT: " + text);
     }
     
     protected static void info(String text) {
         if(verbose) {
-            System.out.println(text);
+            System.out.println("INFO: " + text);
         }
     }
     
     protected static void error(String text) {
-        System.err.println(text);
+        System.err.println("ERR: " + text);
+    }    
+    
+    protected static void error(Throwable e) {
+        e.printStackTrace(System.err);
     }
     
     private static void reportDiff() throws Exception {
@@ -304,7 +308,7 @@ public class STAut {
             info("Section " + section.toString());
             Map<Diff, Integer> diffs = section.diff(next.getSection(section.getId()));
             for(Entry<Diff,Integer> diff : diffs.entrySet()) {
-                System.out.println(diff.getKey() + ": " + diff.getValue());
+                report(diff.getKey() + ": " + diff.getValue());
                 if(!total.containsKey(diff.getKey())) {
                     total.put(diff.getKey(), diff.getValue());
                 } else {
@@ -312,9 +316,9 @@ public class STAut {
                 }
             }
         }
-        System.out.println("Total changed seats:");
+        report("Total changed seats:");
         for(Entry<Diff,Integer> diff : total.entrySet()) {
-            System.out.println(diff.getKey() + ": " + diff.getValue());
+            report(diff.getKey() + ": " + diff.getValue());
         }
     }
     
@@ -331,7 +335,7 @@ public class STAut {
             info("Section " + section.toString());
             SortedMap<Availability, Integer> tickets = section.intersection(next.getSection(section.getId()));
             for(Entry<Availability,Integer> ticket : tickets.entrySet()) {
-                System.out.println(ticket.getKey() + ": " + ticket.getValue());
+                report(ticket.getKey() + ": " + ticket.getValue());
                 if(!total.containsKey(ticket.getKey())) {
                     total.put(ticket.getKey(), ticket.getValue());
                 } else {
@@ -340,9 +344,9 @@ public class STAut {
             }
         }
         
-        System.out.println("Total unchanged seats:");
+        report("Total unchanged seats:");
         for(Entry<Availability,Integer> ticket : total.entrySet()) {
-            System.out.println(ticket.getKey() + ": " + ticket.getValue());
+            report(ticket.getKey() + ": " + ticket.getValue());
         }
     }
     

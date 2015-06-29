@@ -144,21 +144,25 @@ public class Collector {
         return ret;
     }
     
-    public static void download(URL url, File file) throws IOException {
-        URLConnection uc = url.openConnection();
+    public static void download(URL url, File file) {
         STAut.info("Downloading into: " + file);
-        try (InputStream in = uc.getInputStream(); OutputStream outStream = new FileOutputStream(file)) {
+        int total = 0;
+        try (InputStream in = url.openConnection().getInputStream(); OutputStream outStream = new FileOutputStream(file)) {
             int len;
             do {
                 byte[] buffer = new byte[1024];
                 len = in.read(buffer);
                 if(len>0) {
                     outStream.write(buffer,0,len);
+                    total += len;
                 }
             } while(len != -1);
             outStream.flush();
+        } catch (IOException ioe) {
+            STAut.error("Problem downloading URL '" + url + "' into file '" + file + "'");
+            STAut.error(ioe);
         }
-        STAut.info("Finished downloading: " + file);
+        STAut.info("Finished downloading: " + file + " (" + total + " bytes)");
     }
     
     public static File generateFileName(File dir, EventInfo info) {

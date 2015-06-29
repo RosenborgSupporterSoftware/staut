@@ -146,7 +146,7 @@ public class Stadium {
             int open = section.countOpen();
             if(open >0) {
                 totalOpen += open;
-                System.out.println(section.toString() + ": " + open);
+                STAut.report(section.toString() + ": " + open);
             }
         }
         STAut.report("Total: " + totalOpen);
@@ -159,7 +159,7 @@ public class Stadium {
             int unknown = section.countUnknown();
             if(unknown >0) {
                 totalUnknown += unknown;
-                System.out.println(section.toString() + ": " + unknown);
+                STAut.report(section.toString() + ": " + unknown);
             }
         }
         STAut.report("Total: " + totalUnknown);
@@ -172,7 +172,7 @@ public class Stadium {
             int sold = section.countSold();
             if(sold >0) {
                 totalSold += sold;
-                System.out.println(section.toString() + ": " + sold);
+                STAut.report(section.toString() + ": " + sold);
             }
         }
         STAut.report("Total: " + totalSold);
@@ -185,7 +185,7 @@ public class Stadium {
             int hold = section.countHold();
             if(hold >0) {
                 totalHold += hold;
-                System.out.println(section.toString() + ": " + hold);
+                STAut.report(section.toString() + ": " + hold);
             }
         }
         STAut.report("Total: " + totalHold);
@@ -210,7 +210,7 @@ public class Stadium {
     
     public void dump() {
         for (Section section : sections.values()) {
-            System.out.println(section + ": " + section.countSeats());
+            STAut.report(section + ": " + section.countSeats());
         }
         STAut.report("Total: " + totalCount());
     }
