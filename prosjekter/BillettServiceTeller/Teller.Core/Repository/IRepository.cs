@@ -28,15 +28,14 @@ namespace Teller.Core.Repository
         void Store(T evt);
 
         /// <summary>
-        /// Lagre endringer på et objekt i databasen
+        /// Lagre endringer til databasen
         /// </summary>
-        /// <param name="evt">Objektet som skal oppdateres</param>
-        void Update(T evt);
+        void SaveChanges();
 
         /// <summary>
         /// Slette et objekt fra databasen
         /// </summary>
-        /// <param name="id">Unik id på objektet som skal slettes</param>
-        void Delete(long id);
+        /// <param name="evt">Objektet som skal slettes</param>
+        void Delete(T evt);
     }
 }
