@@ -1,9 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Data.Entity;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using System.Data.Entity;
 using Teller.Core.Entities;
 
 namespace Teller.Persistance
@@ -23,7 +18,16 @@ namespace Teller.Persistance
         public TellerContext()
             : base("STAut")
         {
-            
+        }
+
+        protected override void OnModelCreating(DbModelBuilder modelBuilder)
+        {
+            base.OnModelCreating(modelBuilder);
+
+            modelBuilder.Entity<BillettServiceEvent>()
+                        .ToTable("events");
+            modelBuilder.Entity<Measurement>()
+                        .ToTable("measurements");
         }
     }
 }
