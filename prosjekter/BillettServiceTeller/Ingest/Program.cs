@@ -4,6 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using Teller.Persistance;
+using Teller.Persistance.Implementations;
 
 namespace Ingest
 {
@@ -11,12 +12,9 @@ namespace Ingest
     {
         static void Main(string[] args)
         {
-            var db = new TellerContext();
+            var db = new EventRepository(new TellerContext());
 
-            foreach (var billettServiceEvent in db.Events)
-            {
-                Console.WriteLine(billettServiceEvent.DisplayName);
-            }
+            var stuff = db.Get(1);
         }
     }
 }
