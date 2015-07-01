@@ -1,4 +1,5 @@
-﻿using Teller.Core.Entities;
+﻿using System;
+using Teller.Core.Entities;
 
 namespace Teller.Core.BillettService
 {
@@ -11,12 +12,14 @@ namespace Teller.Core.BillettService
         public int Count { get; private set; }
 
         public SeatSummary(string ettCode, string count)
+            : this(ettCode, Convert.ToInt32(count))
+        {
+        }
+
+        public SeatSummary(string ettCode, int count)
         {
             EttCode = new EttCode(ettCode);
-
-            int parsedCount;
-            if (int.TryParse(count, out parsedCount))
-                Count = parsedCount;
+            Count = count;
         }
     }
 }
