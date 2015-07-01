@@ -21,6 +21,11 @@ namespace Teller.Core.Entities
         public int EventNumber { get; set; }
 
         /// <summary>
+        /// BillettService sin event-kode på arrangementet, f.eks. "TLD0915-2015" (Tippeligaen LerkenDal tippeligaen runde 9/15 - 2015)
+        /// </summary>
+        public string EventCode { get; set; }
+
+        /// <summary>
         /// Displaynavn på eventen, typisk "Rosenborg - Fiendelag [ev. turneringsinfo]"
         /// </summary>
         public string DisplayName { get; set; }
@@ -31,9 +36,19 @@ namespace Teller.Core.Entities
         public string Tournament { get; set; }
 
         /// <summary>
+        /// Event-nummer i denne ligaen (teller kun kamper på denne lokasjonen i denne turneringen, bortekamper teller ikke med)
+        /// </summary>
+        public int Round { get; set; }
+
+        /// <summary>
         /// Sesongen denne kampen hører til
         /// </summary>
         public string Season { get; set; }
+
+        /// <summary>
+        /// Lokasjon denne kampen spilles (TLD = Lerkendal, f.eks.)
+        /// </summary>
+        public string Location { get; set; }
 
         /// <summary>
         /// Navnet på motstanderen i kampen
