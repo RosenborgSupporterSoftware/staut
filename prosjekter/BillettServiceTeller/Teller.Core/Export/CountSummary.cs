@@ -1,5 +1,4 @@
-﻿using System.Linq;
-using System.Text;
+﻿using System.Text;
 using Teller.Core.BillettService;
 
 namespace Teller.Core.Export
@@ -8,23 +7,18 @@ namespace Teller.Core.Export
     {
         public string CreateCountSummary(BillettServiceXmlFile ticketFile)
         {
-            var leser = new BillettServiceSeteLeser();
-            var seats = leser.ReadSeatSummary(ticketFile);
-            var stats = seats.Select(s => new { Code = SeatStatusClassifier.Classify(s.EttCode), Seats = s.Count })
-                             .GroupBy(s => s.Code)
-                             .Select(g => new { Status = g.Key, Count = g.Sum(f => f.Seats) })
-                             .OrderByDescending(g => g.Count)
-                             .ToList();
+            var stats = new SummaryGenerator().CreateSummary(ticketFile);
+
             var builder = new StringBuilder();
             var sum = 0;
             var tilskuere = 0;
 
-            foreach (var item in stats)
+            foreach (var kvp in stats)
             {
-                builder.AppendLine(item.Status.ToString().PadRight(30) + item.Count.ToString().PadLeft(5));
-                sum += item.Count;
-                if (item.Status == SeatStatus.Sold || item.Status == SeatStatus.SeasonTicket)
-                    tilskuere += item.Count;
+                builder.AppendLine(kvp.Key.ToString().PadRight(30) + kvp.Value.ToString().PadLeft(5));
+                sum += kvp.Value;
+                if (kvp.Key == SeatStatus.Sold || kvp.Key == SeatStatus.SeasonTicket)
+                    tilskuere += kvp.Value;
             }
             builder.AppendLine("-----------------------------------");
             builder.AppendLine("Tilskuere                     " + tilskuere.ToString().PadLeft(5));
@@ -34,3 +28,4 @@ namespace Teller.Core.Export
         }
     }
 }
+

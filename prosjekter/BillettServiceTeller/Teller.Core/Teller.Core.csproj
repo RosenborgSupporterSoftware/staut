@@ -55,6 +55,7 @@
     <Compile Include="BillettService\BillettServiceSeteLeser.cs" />
     <Compile Include="BillettService\BillettServiceXmlFile.cs" />
     <Compile Include="BillettService\EventInfoPropertyReader.cs" />
+    <Compile Include="BillettService\SummaryGenerator.cs" />
     <Compile Include="Entities\BillettServiceEvent.cs" />
     <Compile Include="BillettService\SeatChange.cs" />
     <Compile Include="BillettService\SeatDiffGenerator.cs" />
