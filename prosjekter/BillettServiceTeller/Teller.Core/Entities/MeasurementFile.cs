@@ -54,7 +54,7 @@ namespace Teller.Core.Entities
                 throw new ArgumentException("Dårlig filnavn");
 
             var match = FilenameRegex.Match(filename);
-            if(match.Groups.Count != 7)
+            if(match.Groups.Count != 8)
                 throw new ArgumentException("Dårlig filnavn");
 
             if (match.Groups["eventid"] != null)
