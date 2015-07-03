@@ -76,6 +76,7 @@
     <Compile Include="Export\FreeSeatsTextSummary.cs" />
     <Compile Include="Export\IExporter.cs" />
     <Compile Include="Export\SoldTextSummary.cs" />
+    <Compile Include="Filedata\FilesystemEventDataFetcher.cs" />
     <Compile Include="Infrastructure\ByteArray.cs" />
     <Compile Include="Infrastructure\PerformanceTester.cs" />
     <Compile Include="Infrastructure\TicketDecoder.cs" />
