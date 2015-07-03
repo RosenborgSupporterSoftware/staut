@@ -65,6 +65,7 @@
     <Compile Include="BillettService\SeatSummary.cs" />
     <Compile Include="Entities\EttCode.cs" />
     <Compile Include="Entities\Measurement.cs" />
+    <Compile Include="Entities\MeasurementFile.cs" />
     <Compile Include="Entities\Rad.cs" />
     <Compile Include="Entities\Sete.cs" />
     <Compile Include="Entities\StadiumPosition.cs" />
@@ -81,7 +82,9 @@
     <Compile Include="Infrastructure\BillettServiceReader.cs" />
     <Compile Include="Infrastructure\XElementExtensions.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Repository\IEventDataFetcher.cs" />
     <Compile Include="Repository\IEventRepository.cs" />
+    <Compile Include="Repository\IMeasurementReader.cs" />
     <Compile Include="Repository\IMeasurementRepository.cs" />
     <Compile Include="Repository\IRepository.cs" />
     <Compile Include="SeatStatus.cs" />

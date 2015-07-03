@@ -65,6 +65,7 @@
     <Compile Include="BillettService\MiscellaneousDataQueries.cs" />
     <Compile Include="BillettService\SeatDiffGeneratorTests.cs" />
     <Compile Include="Entities\EttCodeTests.cs" />
+    <Compile Include="Entities\MeasurementFileTests.cs" />
     <Compile Include="Entities\StadiumPositionTests.cs" />
     <Compile Include="Infrastructure\TicketDecoderTests.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
