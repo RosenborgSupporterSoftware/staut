@@ -81,9 +81,9 @@
     <Compile Include="Infrastructure\TicketDecoder.cs" />
     <Compile Include="Infrastructure\XElementExtensions.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="Repository\IEventDataFetcher.cs" />
+    <Compile Include="Filedata\IEventDataFetcher.cs" />
     <Compile Include="Repository\IEventRepository.cs" />
-    <Compile Include="Repository\IMeasurementReader.cs" />
+    <Compile Include="Filedata\IMeasurementReader.cs" />
     <Compile Include="Repository\IMeasurementRepository.cs" />
     <Compile Include="Repository\IRepository.cs" />
     <Compile Include="SeatStatus.cs" />

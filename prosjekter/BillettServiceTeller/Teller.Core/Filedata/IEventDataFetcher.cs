@@ -1,7 +1,7 @@
 ﻿using System.Collections.Generic;
 using Teller.Core.Entities;
 
-namespace Teller.Core.Repository
+namespace Teller.Core.Filedata
 {
     /// <summary>
     /// Interface for lesing av event-data fra et directory
