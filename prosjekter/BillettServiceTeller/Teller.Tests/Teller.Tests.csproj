@@ -68,6 +68,7 @@
     <Compile Include="Entities\MeasurementFileTests.cs" />
     <Compile Include="Entities\StadiumPositionTests.cs" />
     <Compile Include="Filedata\FilesystemEventDataFetcherTests.cs" />
+    <Compile Include="Filedata\MeasurementReaderTests.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
