@@ -19,6 +19,11 @@ namespace Teller.Core.Entities
         #region Public properties
 
         /// <summary>
+        /// Filnavn og plassering
+        /// </summary>
+        public string FullPath { get { return _fullPath; } }
+
+        /// <summary>
         /// BillettService-id for denne kampen
         /// </summary>
         public long EventId { get; set; }
@@ -37,6 +42,10 @@ namespace Teller.Core.Entities
 
         #region Constructor
 
+        /// <summary>
+        /// Opprett et nytt MeasurementFile-objekt med utgangspunkt i en gitt datafil
+        /// </summary>
+        /// <param name="fullPath">Datafil som er utgangspunkt for dette MeasurementFile-objektet</param>
         public MeasurementFile(string fullPath)
         {
             _fullPath = fullPath;
