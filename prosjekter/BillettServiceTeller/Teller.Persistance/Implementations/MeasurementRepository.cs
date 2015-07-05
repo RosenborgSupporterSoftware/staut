@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using Teller.Core.Entities;
 using Teller.Core.Repository;
@@ -46,6 +47,13 @@ namespace Teller.Persistance.Implementations
         public IEnumerable<Measurement> GetForBillettServiceEvent(int billetServiceId)
         {
             return _context.Measurements.Where(m => m.BillettServiceEventId == billetServiceId);
+        }
+
+        public IEnumerable<Measurement> GetForEventAndDateTimes(BillettServiceEvent bsEvent, IEnumerable<DateTime> dateTimes)
+        {
+            return
+                _context.Measurements.Where(
+                    m => m.BillettServiceEventId == bsEvent.Id && dateTimes.Contains(m.MeasurementTime));
         }
 
         #endregion

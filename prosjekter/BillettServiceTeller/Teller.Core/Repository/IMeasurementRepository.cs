@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using Teller.Core.Entities;
 
 namespace Teller.Core.Repository
@@ -14,5 +15,7 @@ namespace Teller.Core.Repository
         /// <param name="billettServiceId">Event-id man vil ha målinger for</param>
         /// <returns>Alle målinger som finnes for denne eventen</returns>
         IEnumerable<Measurement> GetForBillettServiceEvent(int billettServiceId);
+
+        IEnumerable<Measurement> GetForEventAndDateTimes(BillettServiceEvent bsEvent, IEnumerable<DateTime> dateTimes);
     }
 }
