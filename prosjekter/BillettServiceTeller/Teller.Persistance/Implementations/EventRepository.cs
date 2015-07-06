@@ -44,6 +44,11 @@ namespace Teller.Persistance.Implementations
             _context.SaveChanges();
         }
 
+        public BillettServiceEvent GetByBillettServiceId(int id)
+        {
+            return _context.Events.SingleOrDefault(e => e.EventNumber == id);
+        }
+
         public IEnumerable<BillettServiceEvent> GetByYear(int year)
         {
             return _context.Events.Where(bse => bse.Start.Year == year);
