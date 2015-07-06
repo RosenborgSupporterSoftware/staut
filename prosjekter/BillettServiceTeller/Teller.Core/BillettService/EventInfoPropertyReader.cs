@@ -2,7 +2,6 @@
 using System.Collections.Generic;
 using System.Globalization;
 using System.IO;
-using System.Runtime.Remoting.Messaging;
 using Teller.Core.Entities;
 
 namespace Teller.Core.BillettService

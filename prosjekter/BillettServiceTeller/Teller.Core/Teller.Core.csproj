@@ -37,6 +37,7 @@
       <HintPath>..\packages\DotNetZip.1.9.3\lib\net20\Ionic.Zip.dll</HintPath>
     </Reference>
     <Reference Include="System" />
+    <Reference Include="System.Configuration" />
     <Reference Include="System.Core" />
     <Reference Include="System.Net.Http" />
     <Reference Include="System.Net.Http.Extensions">
@@ -79,9 +80,11 @@
     <Compile Include="Filedata\FilesystemEventDataFetcher.cs" />
     <Compile Include="Filedata\MeasurementReader.cs" />
     <Compile Include="Infrastructure\ByteArray.cs" />
+    <Compile Include="Infrastructure\StautConfiguration.cs" />
     <Compile Include="Infrastructure\PerformanceTester.cs" />
     <Compile Include="Infrastructure\TicketDecoder.cs" />
     <Compile Include="Infrastructure\XElementExtensions.cs" />
+    <Compile Include="Ingestion\MeasurementIngestor.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Filedata\IEventDataFetcher.cs" />
     <Compile Include="Repository\IEventRepository.cs" />
@@ -93,6 +96,7 @@
   <ItemGroup>
     <None Include="packages.config" />
   </ItemGroup>
+  <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <Import Project="..\packages\Microsoft.Bcl.Build.1.0.14\tools\Microsoft.Bcl.Build.targets" Condition="Exists('..\packages\Microsoft.Bcl.Build.1.0.14\tools\Microsoft.Bcl.Build.targets')" />
   <Target Name="EnsureBclBuildImported" BeforeTargets="BeforeBuild" Condition="'$(BclBuildImported)' == ''">

@@ -1,8 +1,5 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using Teller.Core.Filedata;
+using Teller.Core.Ingestion;
 using Teller.Persistance;
 using Teller.Persistance.Implementations;
 
@@ -12,9 +9,18 @@ namespace Ingest
     {
         static void Main(string[] args)
         {
-            var db = new EventRepository(new TellerContext());
+            // Ikke akkurat dependency injection
+            using (var context = new TellerContext())
+            {
+                var eventRepo = new EventRepository(context);
+                var measurementRepo = new MeasurementRepository(context);
+                var eventFetcher = new FilesystemEventDataFetcher();
+                var measurementReader = new MeasurementReader();
 
-            var stuff = db.Get(1);
+                var ingestor = new MeasurementIngestor(eventRepo, measurementRepo, eventFetcher, measurementReader);
+
+                ingestor.ReadAndIngestData();
+            }
         }
     }
 }
