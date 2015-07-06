@@ -78,6 +78,7 @@
     <Compile Include="Export\IExporter.cs" />
     <Compile Include="Export\SoldTextSummary.cs" />
     <Compile Include="Filedata\FilesystemEventDataFetcher.cs" />
+    <Compile Include="Filedata\IFileArchiver.cs" />
     <Compile Include="Filedata\MeasurementReader.cs" />
     <Compile Include="Infrastructure\ByteArray.cs" />
     <Compile Include="Infrastructure\StautConfiguration.cs" />
