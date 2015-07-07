@@ -15,7 +15,7 @@ namespace Teller.Core.BillettService
         {
             var props = Readfile(file);
 
-            var bsEvent = new BillettServiceEvent();
+            var bsEvent = new BillettServiceEvent {Measurements = new List<Measurement>()};
 
             foreach (var prop in props)
             {
