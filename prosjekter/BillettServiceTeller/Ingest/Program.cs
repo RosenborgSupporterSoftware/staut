@@ -16,8 +16,9 @@ namespace Ingest
                 var measurementRepo = new MeasurementRepository(context);
                 var eventFetcher = new FilesystemEventDataFetcher();
                 var measurementReader = new MeasurementReader();
+                var fileArchiver = new FileArchiver();
 
-                var ingestor = new MeasurementIngestor(eventRepo, measurementRepo, eventFetcher, measurementReader);
+                var ingestor = new MeasurementIngestor(eventRepo, measurementRepo, eventFetcher, measurementReader, fileArchiver);
 
                 ingestor.ReadAndIngestData();
             }
