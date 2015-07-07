@@ -79,6 +79,7 @@
     <Compile Include="Export\SoldTextSummary.cs" />
     <Compile Include="Filedata\FileArchiver.cs" />
     <Compile Include="Filedata\FilesystemEventDataFetcher.cs" />
+    <Compile Include="Filedata\ICleanupOperation.cs" />
     <Compile Include="Filedata\IFileArchiver.cs" />
     <Compile Include="Filedata\MeasurementReader.cs" />
     <Compile Include="Infrastructure\ByteArray.cs" />
