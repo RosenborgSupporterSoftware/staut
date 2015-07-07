@@ -103,6 +103,11 @@ namespace StautApi
             throw new System.NotImplementedException();
         }
 
+        public BillettServiceEvent GetByBillettServiceId(int id)
+        {
+            throw new NotImplementedException();
+        }
+
         public IEnumerable<BillettServiceEvent> GetByYear(int year)
         {
             return _events;
