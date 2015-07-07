@@ -11,22 +11,20 @@ namespace Teller.Core.Filedata
     {
         public void MoveToArchive(MeasurementFile measurementFile)
         {
-            if(measurementFile.FullPath==null)
-                return;
-
-            var dirInfo = new DirectoryInfo(measurementFile.FullPath);
-            if(dirInfo.Parent==null) // Skjer vel ikke, mest for å få ReSharper til å slutte å mase mens jeg holder på.
-                return;
+            var sourceDirectory = Path.GetDirectoryName(measurementFile.FullPath);
+            if(String.IsNullOrWhiteSpace(sourceDirectory))
+                return; // Kutt resharper-mas
+            
             var eventDate =
                 new EventInfoPropertyReader().ReadProperties(
-                    Path.Combine(Path.GetDirectoryName(measurementFile.FullPath), "eventinfo.properties")).Start;
-            var destinationPath = GetDestinationPath(eventDate, dirInfo.Parent.Name);
+                    Path.Combine(sourceDirectory, "eventinfo.properties")).Start;
+            var destinationPath = GetDestinationPath(eventDate, GetLeafDirectoryName(measurementFile.FullPath));
             if (!Directory.Exists(destinationPath))
                 Directory.CreateDirectory(destinationPath);
 
             var destinationPropertyFile = Path.Combine(destinationPath, "eventinfo.properties");
             if (!File.Exists(destinationPropertyFile))
-                File.Copy(Path.Combine(Path.GetDirectoryName(measurementFile.FullPath), "eventinfo.properties"),
+                File.Copy(Path.Combine(sourceDirectory, "eventinfo.properties"),
                     destinationPropertyFile);
 
             var destinationFileName = Path.Combine(destinationPath, Path.GetFileName(measurementFile.FullPath));
