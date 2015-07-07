@@ -22,17 +22,19 @@ namespace Teller.Core.Ingestion
         private readonly IMeasurementRepository _measurementRepository;
         private readonly IEventDataFetcher _eventDataFetcher;
         private readonly IMeasurementReader _measurementReader;
+        private readonly IFileArchiver _fileArchiver;
 
         #endregion
 
         #region Constructor
 
-        public MeasurementIngestor(IEventRepository eventRepository, IMeasurementRepository measurementRepository, IEventDataFetcher eventDataFetcher, IMeasurementReader measurementReader)
+        public MeasurementIngestor(IEventRepository eventRepository, IMeasurementRepository measurementRepository, IEventDataFetcher eventDataFetcher, IMeasurementReader measurementReader, IFileArchiver fileArchiver)
         {
             _eventRepository = eventRepository;
             _measurementRepository = measurementRepository;
             _eventDataFetcher = eventDataFetcher;
             _measurementReader = measurementReader;
+            _fileArchiver = fileArchiver;
         }
 
         #endregion
@@ -65,17 +67,20 @@ namespace Teller.Core.Ingestion
                     if (existingMeasurements.Any(e => e.MeasurementTime == diskMeasurement.MeasurementTime))
                     {
                         Console.WriteLine("Vi vil ikke ha denne: " + diskMeasurement.FullPath);
-                        // TODO: Arkivér de vi har fra før
+                        _fileArchiver.MoveToArchive(diskMeasurement);
                         continue;
                     }
                     var measurement = _measurementReader.ReadMeasurement(diskMeasurement);
                     dbEvent.Measurements.Add(measurement);
-                    // TODO: Arkivér dem etterhvert
+
+                    _fileArchiver.MoveToArchive(diskMeasurement);
                 }
     
             }
 
             _eventRepository.SaveChanges();
+
+            _fileArchiver.PerformCleanup();
         }
 
         #endregion
