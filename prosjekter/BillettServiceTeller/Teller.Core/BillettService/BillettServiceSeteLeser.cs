@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Xml.Linq;
-using Teller.Core.Infrastructure;
+using Teller.Core.Extensions;
 
 namespace Teller.Core.BillettService
 {
