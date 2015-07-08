@@ -1,8 +1,11 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using System.Reflection;
 using Teller.Core.BillettService;
 using Teller.Core.Entities;
+using Teller.Core.Extensions;
 using Teller.Core.Infrastructure;
 
 namespace Teller.Core.Filedata
@@ -18,7 +21,7 @@ namespace Teller.Core.Filedata
             var eventDate =
                 new EventInfoPropertyReader().ReadProperties(
                     Path.Combine(sourceDirectory, "eventinfo.properties")).Start;
-            var destinationPath = GetDestinationPath(eventDate, GetLeafDirectoryName(measurementFile.FullPath));
+            var destinationPath = PathUtils.GetStoragePath(eventDate, PathUtils.GetLeafDirectoryName(measurementFile.FullPath));
             if (!Directory.Exists(destinationPath))
                 Directory.CreateDirectory(destinationPath);
 
@@ -31,14 +34,28 @@ namespace Teller.Core.Filedata
             File.Move(measurementFile.FullPath, destinationFileName);
         }
 
-        // TODO: Alle operasjonene som kjøres her bør skilles ut i egne objekter som implementerer et interface så vi lett kan loope igjennom dem. Finn dem med reflection.
         public void PerformCleanup()
         {
-            PurgeOldCollectorFolders();
+            var operations = FindCleanupOperations();
 
+            foreach (var operation in operations)
+            {
+                operation.PerformCleanup();
+            }
+
+            // ICleanupOperation-implementasjoner som hadde vært kjekke å ha
             // TODO: ZIP opp kamper hvor directory finnes men den er over (dvs. hele datoen passert)
             // TODO: Legg til ZIP-filer for en måned som er ferdig i den månedens zip-fil
             // TODO: Når et år har gått, legg zip-filer for det årets måneder i års-zip
+        }
+
+        private IEnumerable<ICleanupOperation> FindCleanupOperations()
+        {
+            return Assembly.GetExecutingAssembly()
+                           .GetTypes()
+                           .Where(t => !t.IsInterface && typeof (ICleanupOperation).IsAssignableFrom(t))
+                           .Select(t => Activator.CreateInstance(t) as ICleanupOperation)
+                           .OrderBy(i => i.Priority);
         }
 
         private void PurgeOldCollectorFolders()
@@ -55,8 +72,8 @@ namespace Teller.Core.Filedata
                 var fileCount = Directory.GetFiles(Path.GetDirectoryName(propFile)).Count();
                 if(fileCount > 1) // Ligger det flere filer der holder vi avstand.
                     continue;
-                var leafDir = GetLeafDirectoryName(propFile);
-                var storagePropFilename = Path.Combine(GetDestinationPath(info.Start, leafDir), "eventinfo.properties");
+                var leafDir = PathUtils.GetLeafDirectoryName(propFile);
+                var storagePropFilename = Path.Combine(PathUtils.GetStoragePath(info.Start, leafDir), "eventinfo.properties");
                 if(!File.Exists(storagePropFilename)) // Hvis ikke eventinfo-fila er kopiert over holder vi oss unna.
                     continue;
                 // Kommer vi hit må vi vel endelig innse at dette directoriet kan slettes
@@ -66,20 +83,6 @@ namespace Teller.Core.Filedata
 
         #region Utility methods
 
-        private string GetDestinationPath(DateTime eventDate, string eventFolderName)
-        {
-            return Path.Combine(StautConfiguration.Current.StorageDirectory,
-                eventDate.Year.ToString(), eventDate.Month.ToString(),
-                eventFolderName);
-        }
-
-        private string GetLeafDirectoryName(string path)
-        {
-            var dirInfo = new DirectoryInfo(path);
-            if(dirInfo.Parent==null)
-                throw new ArgumentException("Fila ligger tilsynelatende ikke i noe directory + " + path, "path");
-            return dirInfo.Parent.Name;
-        }
 
         #endregion
     }
