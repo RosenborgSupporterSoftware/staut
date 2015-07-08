@@ -7,6 +7,9 @@ using Teller.Core.Infrastructure;
 
 namespace Teller.Core.Filedata
 {
+    /// <summary>
+    /// Operasjon som finner og sletter mapper for kamper som er i fortiden
+    /// </summary>
     public class PurgeCollectorFoldersOperation : ICleanupOperation
     {
         public double Priority
@@ -20,6 +23,7 @@ namespace Teller.Core.Filedata
 
             var propFiles = Directory.GetFiles(StautConfiguration.Current.CollectorDirectory, "eventinfo.properties",
                 SearchOption.AllDirectories);
+            
             foreach (var propFile in propFiles)
             {
                 var propDir = Path.GetDirectoryName(propFile);
