@@ -30,6 +30,8 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = ".nuget", ".nuget", "{9AD9A2
 		.nuget\NuGet.targets = .nuget\NuGet.targets
 	EndProjectSection
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Teller.Charts", "Teller.Charts\Teller.Charts.csproj", "{ADD9F067-DFB2-45AE-A749-D7817859B49F}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -60,6 +62,10 @@ Global
 		{B9FC3E0F-A025-4755-BD77-C8AE068C7643}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{B9FC3E0F-A025-4755-BD77-C8AE068C7643}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{B9FC3E0F-A025-4755-BD77-C8AE068C7643}.Release|Any CPU.Build.0 = Release|Any CPU
+		{ADD9F067-DFB2-45AE-A749-D7817859B49F}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{ADD9F067-DFB2-45AE-A749-D7817859B49F}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{ADD9F067-DFB2-45AE-A749-D7817859B49F}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{ADD9F067-DFB2-45AE-A749-D7817859B49F}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -71,5 +77,6 @@ Global
 		{A5B174D5-3BAB-4E5B-AA7F-338B14CB4C5A} = {6894BD97-9861-42B0-9647-3175E9AA0075}
 		{E601130F-CF8D-4FCB-BB5B-664ADEDF55B9} = {D6468D86-C044-4744-BF71-0CAF5625F1EF}
 		{B9FC3E0F-A025-4755-BD77-C8AE068C7643} = {25685C02-691A-4FA3-A6B8-DE0F8347AD5C}
+		{ADD9F067-DFB2-45AE-A749-D7817859B49F} = {6894BD97-9861-42B0-9647-3175E9AA0075}
 	EndGlobalSection
 EndGlobal
