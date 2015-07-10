@@ -7,6 +7,11 @@ import java.net.URL;
  * Opponent, event date and time, event ID, URLs for ticketing data, etc.
  */
 public class EventInfo implements Comparable {
+    
+    public final static String LEAGUE_COMPETITION = "LEAGUE";
+    public final static String CUP_COMPETITION = "NM";
+    public final static String EC_COMPETITION = "EC";
+    
     private final int eventId;
     private String eventName;
     private String eventDate;
@@ -14,7 +19,6 @@ public class EventInfo implements Comparable {
     private String location;
     private String competition;
     private int round;
-    private String opponent;
     private String eventCode;
     private URL availabilityURL;
     private URL geometryURL;
@@ -56,14 +60,14 @@ public class EventInfo implements Comparable {
      * @return the opponent
      */
     public String getOpponent() {
-        return opponent;
-    }
-
-    /**
-     * @param opponent the opponent to set
-     */
-    public void setOpponent(String opponent) {
-        this.opponent = opponent;
+        if(isLeagueGame()) {
+            // Return everything from eventname after the -
+            return eventName.split("-")[1].trim();
+        } else {
+            // Return the first word from eventname after the -
+            // TODO: Specific handling for NM and EC games depending on what eventName looks like for those competitions.
+            return eventName.split("-")[1].trim().split("\\s+")[0];
+        }
     }
 
     /**
@@ -210,6 +214,10 @@ public class EventInfo implements Comparable {
      */
     public void setRound(int round) {
         this.round = round;
+    }
+    
+    public boolean isLeagueGame() {
+        return competition.equals(LEAGUE_COMPETITION);
     }
     
 }

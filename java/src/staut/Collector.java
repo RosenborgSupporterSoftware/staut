@@ -10,6 +10,7 @@ import java.io.OutputStream;
 import java.net.URL;
 import java.net.URLConnection;
 import java.nio.charset.Charset;
+import java.nio.file.Files;
 import java.text.SimpleDateFormat;
 import java.time.Duration;
 import java.util.ArrayList;
@@ -94,7 +95,6 @@ public class Collector {
                     if(prop.contains("eventName")) {
                         String name = replaceUnicodeEscapes(colonSplit[counter].split("\"")[1]);
                         info.setEventName(name);
-                        info.setOpponent(name.split("-")[1].trim().split("\\s+")[0]);
                     } else if(prop.contains("availabilityURL")) {
                         info.setAvailabilityURL(new URL(BASE_BILLETTSERVICE_URL + colonSplit[counter].split("\"")[1].replace("\\", "")));
                         String eventCode = info.getAvailabilityURL().getPath().split("/NO/")[1].split(",")[0];
@@ -104,15 +104,23 @@ public class Collector {
                         }
                         if(eventCode != null && eventCode.length() >=5) {
                             String part2 = eventCode.substring(3, 5);
-                            if(part2.matches("\\d\\d")) { // Two digits
+                            if(eventCode.length() >= 8 && eventCode.substring(7,8).equals("N")) {
+                                // This is Norwegian cup.
+                                info.setCompetition(EventInfo.CUP_COMPETITION);
+                                info.setRound(0); // unknown
+                            } else if(part2.matches("\\d\\d")) { // Two digits
                                 // This is a league game.
-                                info.setCompetition("LEAGUE");
+                                info.setCompetition(EventInfo.LEAGUE_COMPETITION);
                                 info.setRound(Integer.parseInt(part2));
-                            } else {
-                                info.setCompetition(eventCode.substring(3, 5));
+                            } else if(eventCode.substring(3, 5).equals(EventInfo.EC_COMPETITION)){
+                                // This is European cup.
+                                info.setCompetition(EventInfo.EC_COMPETITION);
                                 if(eventCode.length() >=7) {
                                     info.setRound(Integer.parseInt(eventCode.substring(5,7)));
                                 }
+                            } else {
+                                info.setCompetition("unknown");
+                                info.setRound(0);
                             }
                         }
                     } else if(prop.contains("mapsellURL")) {
@@ -144,9 +152,10 @@ public class Collector {
         return ret;
     }
     
-    public static void download(URL url, File file) {
+    public static int download(URL url, File file) throws IOException {
         STAut.info("Downloading into: " + file);
         int total = 0;
+        Files.createFile(file.toPath());
         try (InputStream in = url.openConnection().getInputStream(); OutputStream outStream = new FileOutputStream(file)) {
             int len;
             do {
@@ -163,6 +172,7 @@ public class Collector {
             STAut.error(ioe);
         }
         STAut.info("Finished downloading: " + file + " (" + total + " bytes)");
+        return total;
     }
     
     public static File generateFileName(File dir, EventInfo info) {

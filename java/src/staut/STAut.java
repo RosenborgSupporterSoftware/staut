@@ -5,6 +5,7 @@ import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.net.URL;
+import java.nio.charset.Charset;
 import java.nio.file.Files;
 import java.util.ArrayList;
 import java.util.List;
@@ -56,6 +57,7 @@ public class STAut {
      * operations.
      */
     public static void main(String[] args) throws Exception {
+        info("System file encoding: " + java.lang.System.getProperty("file.encoding"));
         parseCommandline(args);
         if(!validateArguments()) {
             usage(1);
@@ -158,6 +160,7 @@ public class STAut {
     
     private static void writeDecodedOutput(String decoded, File file) throws IOException {
         info("Writing decoded data to file: " + file.getAbsolutePath());
+        Files.createFile(file.toPath());
         Files.write(file.toPath(), decoded.getBytes());
     }
     
@@ -269,12 +272,15 @@ public class STAut {
         return XMLContainsElement(xmlfile, "Grand_total_summary");
     }
     
+    public static boolean isErrorXML(File xmlfile) throws Exception {
+        return XMLContainsElement(xmlfile, "error");
+    }
+    
     private static boolean XMLContainsElement(File xmlfile, String element) throws Exception {
         DocumentBuilder builder = DocumentBuilderFactory.newInstance().newDocumentBuilder();
         InputSource source = new InputSource(new InputStreamReader(new FileInputStream(xmlfile)));
         Document document = builder.parse(source);
         return (document.getElementsByTagName(element).getLength() >= 1);
-        
     }
     
     protected static void report(String text) {

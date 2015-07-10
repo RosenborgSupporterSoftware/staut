@@ -12,8 +12,11 @@ import java.util.List;
 import java.util.zip.Inflater;
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
+import javax.xml.parsers.ParserConfigurationException;
+import org.w3c.dom.DOMException;
 import org.w3c.dom.Document;
 import org.xml.sax.InputSource;
+import org.xml.sax.SAXException;
 
 /**
  * AvailabilityDecoder
@@ -22,17 +25,26 @@ import org.xml.sax.InputSource;
  */
 public class AvailabilityDecoder {
     
+    public static String extractFromXml(File xmlfile, String element) {
+        try {
+            DocumentBuilder builder = DocumentBuilderFactory.newInstance().newDocumentBuilder();
+            InputSource source = new InputSource(new InputStreamReader(new FileInputStream(xmlfile)));
+            Document document = builder.parse(source);
+            return document.getElementsByTagName(element).item(0).getTextContent();
+        } catch (ParserConfigurationException | SAXException | IOException | DOMException e) {
+            STAut.error("Problem extracting element '" + element + "' from xmlfile: " + xmlfile);
+            return null;
+        }
+    }
+    
     /**
      * Extracts the content of xml element ev_comp and returns it as a String.
      * @param xmlfile File to read from.
      * @return String contining content of ev_comp element.
      * @throws Exception If there is a problem extracting the String.
      */
-    private static String extractFromXml(File xmlfile) throws Exception {
-        DocumentBuilder builder = DocumentBuilderFactory.newInstance().newDocumentBuilder();
-        InputSource source = new InputSource(new InputStreamReader(new FileInputStream(xmlfile)));
-        Document document = builder.parse(source);
-        return document.getElementsByTagName("ev_comp").item(0).getTextContent();
+    private static String extractEvCompFromXml(File xmlfile) {
+        return extractFromXml(xmlfile,"ev_comp");
     }
 
     /**
@@ -44,7 +56,7 @@ public class AvailabilityDecoder {
      * the target file.
      */
     public static String decode(File xmlfile) throws Exception {
-        String ev_comp = extractFromXml(xmlfile);
+        String ev_comp = extractEvCompFromXml(xmlfile);
         InputStream stream = new ByteArrayInputStream(ev_comp.getBytes());
         InputStream decodedStream = Base64.getDecoder().wrap(stream);
         return "<xml>"+ ran(decodedStream) + "</xml>";
