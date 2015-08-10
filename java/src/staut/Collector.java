@@ -7,6 +7,8 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.io.OutputStream;
+import java.net.HttpURLConnection;
+import java.net.MalformedURLException;
 import java.net.URL;
 import java.net.URLConnection;
 import java.nio.charset.Charset;
@@ -61,8 +63,7 @@ public class Collector {
     }
     
     public static List<EventInfo> findActiveEvents() throws IOException {
-        URL url = new URL(LERKENDAL_URL);
-        URLConnection uc = url.openConnection();
+        HttpURLConnection uc = getHttpURLConnection(new URL(LERKENDAL_URL));
         InputStreamReader input = new InputStreamReader(uc.getInputStream());
         BufferedReader in = new BufferedReader(input);
         String inputLine;
@@ -79,14 +80,35 @@ public class Collector {
         return ids;
     }
     
+    private static HttpURLConnection getHttpURLConnection(URL url) throws IOException { 
+        HttpURLConnection uc = (HttpURLConnection) url.openConnection();
+        uc.setInstanceFollowRedirects(true);
+	int status = uc.getResponseCode();
+	if (status != HttpURLConnection.HTTP_OK) {
+            STAut.info("Could not open URL " + url + ", status " + status);
+		if (status == HttpURLConnection.HTTP_MOVED_TEMP
+			|| status == HttpURLConnection.HTTP_MOVED_PERM
+				|| status == HttpURLConnection.HTTP_SEE_OTHER) {
+		// Redirect
+		String redirect = uc.getHeaderField("Location");
+                uc = (HttpURLConnection) new URL(redirect).openConnection();
+                STAut.info("Redirecting to " + redirect);
+            }
+	}
+        return uc;
+    }
+    
     public static EventInfo extractEventInfo(Integer eventId) throws IOException {
         EventInfo info = new EventInfo(eventId);
         URL eventPage = new URL(BASE_EVENT_PAGE_URL + eventId);
-        URLConnection uc = eventPage.openConnection();
+        HttpURLConnection uc = getHttpURLConnection(eventPage);
+        info.setEventURL(uc.getURL());
+        STAut.info("Extracting event information from URL: " + uc.getURL());
         InputStreamReader input = new InputStreamReader(uc.getInputStream(), Charset.forName("UTF-8"));
         BufferedReader in = new BufferedReader(input);
         String inputLine;
-        while ((inputLine = in.readLine()) != null) {
+        boolean foundAvailabilityData = false;
+        while ((inputLine = in.readLine()) != null && !foundAvailabilityData) {
             if(inputLine.contains("availabilityURL")) {
                 String[] colonSplit = inputLine.split(":");
                 int counter=0;
@@ -96,6 +118,7 @@ public class Collector {
                         String name = replaceUnicodeEscapes(colonSplit[counter].split("\"")[1]);
                         info.setEventName(name);
                     } else if(prop.contains("availabilityURL")) {
+                        foundAvailabilityData = true;
                         info.setAvailabilityURL(new URL(BASE_BILLETTSERVICE_URL + colonSplit[counter].split("\"")[1].replace("\\", "")));
                         String eventCode = info.getAvailabilityURL().getPath().split("/NO/")[1].split(",")[0];
                         info.setEventCode(eventCode);
@@ -133,6 +156,9 @@ public class Collector {
                 }
             }
         }
+        if(!foundAvailabilityData) {
+            STAut.error("Could not find relevant event details for event. " + info.detailedString());
+        }
         return info;
     }
     
@@ -156,7 +182,7 @@ public class Collector {
         STAut.info("Downloading into: " + file);
         int total = 0;
         Files.createFile(file.toPath());
-        try (InputStream in = url.openConnection().getInputStream(); OutputStream outStream = new FileOutputStream(file)) {
+        try (InputStream in = getHttpURLConnection(url).getInputStream(); OutputStream outStream = new FileOutputStream(file)) {
             int len;
             do {
                 byte[] buffer = new byte[1024];

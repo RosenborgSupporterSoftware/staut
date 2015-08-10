@@ -22,11 +22,12 @@ public class EventInfo implements Comparable {
     private String eventCode;
     private URL availabilityURL;
     private URL geometryURL;
+    private URL eventURL;
     
     public EventInfo(int id) {
         this.eventId = id;
     }
-
+    
     /**
      * @return the eventId
      */
@@ -134,6 +135,22 @@ public class EventInfo implements Comparable {
             return -1;
         }
     }
+
+    public String detailedString() {
+        StringBuilder sb = new StringBuilder();
+        sb.append("ID: ").append(eventId).append("\n");
+        sb.append("Name: ").append(eventName).append("\n");
+        sb.append("Date: ").append(eventDate).append("\n");
+        sb.append("Time: ").append(eventTime).append("\n");
+        sb.append("Location: ").append(location).append("\n");
+        sb.append("Competition: ").append(competition).append("\n");
+        sb.append("Round: ").append(round).append("\n");
+        sb.append("Code: ").append(eventCode).append("\n");
+        sb.append("AvailabilityURL: ").append(availabilityURL).append("\n");
+        sb.append("GeometryURL: ").append(geometryURL).append("\n");
+        sb.append("EventURL: ").append(eventURL);
+        return sb.toString();
+    }
     
     @Override
     public String toString() {
@@ -218,6 +235,20 @@ public class EventInfo implements Comparable {
     
     public boolean isLeagueGame() {
         return competition.equals(LEAGUE_COMPETITION);
+    }
+
+    /**
+     * @return the eventURL
+     */
+    public URL getEventURL() {
+        return eventURL;
+    }
+
+    /**
+     * @param eventURL the eventURL to set
+     */
+    public void setEventURL(URL eventURL) {
+        this.eventURL = eventURL;
     }
     
 }

@@ -41,10 +41,12 @@ public class CheckEventsTask implements Runnable {
         for(EventInfo info : infos) {
             if(!Collector.activeCollects.containsKey(info)) {
                 if(info.getAvailabilityURL() != null) {
+                    STAut.info("New event:\n" + info.detailedString());
                     startAvailabilityCollection(info);
                 } else {
                     STAut.info("Failed to find availabilityURL for event " + info);
                     STAut.info("Most likely internet sale has not yet started.");
+                    STAut.info("All details we could collect: " + info.detailedString());
                 }
             }
         }
