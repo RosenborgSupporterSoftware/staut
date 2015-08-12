@@ -25,7 +25,6 @@ namespace Teller
         /// Skal vi telle opp seter og gi en oppsummering?
         /// </summary>
         public bool PrintCountSummary { get; private set; }
-
         /// <summary>
         /// Har vi input-fil som eksisterer?
         /// </summary>
@@ -81,16 +80,12 @@ namespace Teller
             parser.Setup<string>('s').Callback(val => { SeatQuery = val; });
             parser.Setup<bool>('a').Callback(val => { DumpArgs = val; });
             parser.Setup<bool>('h').Callback(val => { Hate = val; });
-            parser
-                .Setup<string>('t')
-                .Callback(val =>
-                {
-                    PrintCountSummary = true;
-                    CountFile = val;
-                })
-                .SetDefault(string.Empty);
-
-            
+            parser.Setup<string>('t').Callback(val =>
+            {
+                if (val == string.Empty) return;
+                PrintCountSummary = true;
+                CountFile = val;
+            });
 
             parser.Parse(args);
         }

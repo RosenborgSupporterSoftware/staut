@@ -45,6 +45,8 @@ namespace Teller
             }
             
             if (_opts.Hate) PrintHate();
+
+            Console.ReadKey();
         }
 
         private void PrintHeader()
@@ -82,11 +84,13 @@ namespace Teller
 
         private void PrintCountSummary()
         {
-            if (!String.IsNullOrWhiteSpace(_opts.CountFile))
-                Console.WriteLine("Skriver opptellingsinformasjon til {0}", _opts.CountFile);
             var summary = new CountSummary().CreateCountSummary(_ticketFile);
-            if (!String.IsNullOrWhiteSpace(_opts.CountFile))
+            if (!String.IsNullOrWhiteSpace(_opts.CountFile) && _opts.CountFile != "console")
+            {
+                Console.WriteLine("Skriver opptellingsinformasjon til {0}", _opts.CountFile);
                 File.WriteAllText(_opts.CountFile, summary);
+            }
+                
             Console.Write(summary);
 
             _outputsUsed++;
