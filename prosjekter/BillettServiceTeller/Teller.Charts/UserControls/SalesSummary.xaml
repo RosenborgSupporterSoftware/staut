@@ -1,0 +1,67 @@
+﻿<UserControl x:Class="Teller.Charts.UserControls.SalesSummary"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+             mc:Ignorable="d"
+             >
+    <Grid Margin="2"
+          Background="White"
+          >
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto" />
+            <RowDefinition Height="Auto" />
+            <RowDefinition Height="Auto" />
+            <RowDefinition Height="Auto" />
+            <RowDefinition Height="Auto" />
+        </Grid.RowDefinitions>
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="Auto" />
+            <ColumnDefinition Width="*" />
+        </Grid.ColumnDefinitions>
+
+        <TextBlock Grid.Row="0"
+                   Grid.Column="0"
+                   Text="Solgte billetter" />
+        <TextBlock Grid.Row="0"
+                   Grid.Column="1"
+                   Text="{Binding SoldTickets}"
+                   HorizontalAlignment="Right" />
+        <TextBlock Grid.Row="1"
+                   Grid.Column="0"
+                   Text="Sesongkort" />
+        <TextBlock Grid.Row="1"
+                   Grid.Column="1"
+                   Text="{Binding SoldSeasonTickets}"
+                   HorizontalAlignment="Right" />
+
+        <TextBlock Grid.Row="3"
+                   Grid.Column="0"
+                   Text="Reservert/ukjent" />
+        <TextBlock Grid.Row="3"
+                   Grid.Column="1"
+                   Text="{Binding ReservedUnknownTickets}"
+                   HorizontalAlignment="Right" />
+
+        <TextBlock Grid.Row="4"
+                   Grid.Column="0"
+                   Text="Til salgs" />
+        <TextBlock Grid.Row="4"
+                   Grid.Column="1"
+                   Text="{Binding TicketsForSale}"
+                   HorizontalAlignment="Right" />
+
+        <TextBlock Grid.Row="2"
+                   Grid.Column="0"
+                   Text="Tilskuere totalt"
+                   FontSize="20"
+                   VerticalAlignment="Bottom" />
+        <TextBlock Grid.Row="2"
+                   Grid.Column="1"
+                   Text="{Binding GrandSumTotal}"
+                   FontSize="20"
+                   HorizontalAlignment="Right"
+                   Margin="10,0,0,0" />
+
+    </Grid>
+</UserControl>
