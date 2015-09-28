@@ -3,6 +3,7 @@ using System.Linq;
 using System.Text;
 using Teller.Core;
 using Teller.Core.BillettService;
+using Teller.Core.Export;
 using Xunit;
 
 namespace Teller.Tests.BillettService
@@ -228,6 +229,24 @@ namespace Teller.Tests.BillettService
         }
 
         [Fact]
+        public void Bortesupportere_Solgt()
+        {
+            var sut = new BillettServiceSeteLeser();
+            var file = BillettServiceXmlFile.LoadFile(@"D:\temp\staut\TestData\438531_StabÃ¦k_2015-09-08T10-57.xml");
+            var res = sut.ReadSeats(file).ToList();
+
+            var allRelevantCodes = res.Where(s => s.SectionName.Contains("SB") || s.SectionName.Contains("RB"))
+                                      .Select(s => SeatStatusClassifier.Classify(s.EttCode))
+                                      .GroupBy(g => g)
+                                      .Select(g => new { Code = g.Key, Count = g.Count() })
+                                      .ToList();
+
+            var output = allRelevantCodes.Count;
+
+            Console.WriteLine(output);
+        }
+
+        [Fact]
         public void Hvor_ErDet_Ledig()
         {
             var sut = new BillettServiceSeteLeser();
@@ -255,5 +274,31 @@ namespace Teller.Tests.BillettService
 
             Console.WriteLine(output);
         }
+
+        // 
+
+        [Fact]
+        public void Query_Tribune_Oversikt()
+        {
+            // Arrange
+            var sut = new BillettServiceSeteLeser();
+            var file = BillettServiceXmlFile.LoadFile(@"D:\temp\staut\testdata\438527_VÃ¥lerenga_2015-08-15T14-03.xml");
+
+            //var summary = new CountSummary().CreateCountSummary(file);
+
+            var res = sut.ReadSeats(file).ToList();
+
+            var stats = res.Where(s => s.Position.Contains("KJ") )//|| s.Position.Contains("RB"))
+                           .Select(s => SeatStatusClassifier.Classify(s.EttCode))
+                           .GroupBy(s => s)
+                           .Select(g => new { Status = g.Key, Count = g.Count() })
+                           .ToList();
+
+            // Act
+            Console.WriteLine("Res: ", stats.Count);
+            // Assert
+        }
+
+
     }
 }
