@@ -71,7 +71,9 @@ namespace Teller.Core.Ingestion
                         continue;
                     }
                     var measurement = _measurementReader.ReadMeasurement(diskMeasurement);
-                    dbEvent.Measurements.Add(measurement);
+                    
+                    if(measurement != null) // Er denne null, så var .xml-fila ikke brukbar for oss - vedlikehold hos BS, f.eks.
+                        dbEvent.Measurements.Add(measurement);
 
                     _fileArchiver.MoveToArchive(diskMeasurement);
                 }

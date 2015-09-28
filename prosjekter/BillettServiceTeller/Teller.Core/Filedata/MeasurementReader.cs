@@ -8,6 +8,9 @@ namespace Teller.Core.Filedata
         public Measurement ReadMeasurement(MeasurementFile measurementFile)
         {
             var ticketFile = BillettServiceXmlFile.LoadFile(measurementFile.FullPath);
+            if (ticketFile == null)
+                return null;
+
             var summary = new SummaryGenerator().CreateSummary(ticketFile);
 
             Measurement measurement = new Measurement
