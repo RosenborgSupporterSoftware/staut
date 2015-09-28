@@ -25,6 +25,16 @@ namespace Teller.Core.Infrastructure
         /// </summary>
         public string StorageDirectory { get; set; }
 
+        /// <summary>
+        /// Filområdet der vi genererer statiske bilder til kamptråder
+        /// </summary>
+        public string StaticImageDirectory { get; set; }
+
+        /// <summary>
+        /// Filområdet hvor vi har logoene til svina vi spiller mot
+        /// </summary>
+        public string LogoDirectory { get; set; }
+
         #endregion
 
         #region Static properties
@@ -46,7 +56,9 @@ namespace Teller.Core.Infrastructure
             return new StautConfiguration
             {
                 CollectorDirectory = ConfigurationManager.AppSettings["collectorDirectory"],
-                StorageDirectory = ConfigurationManager.AppSettings["storageDirectory"]
+                StorageDirectory = ConfigurationManager.AppSettings["storageDirectory"],
+                StaticImageDirectory = ConfigurationManager.AppSettings["staticImageDirectory"],
+                LogoDirectory = ConfigurationManager.AppSettings["logoDirectory"]
             };
         }
 
