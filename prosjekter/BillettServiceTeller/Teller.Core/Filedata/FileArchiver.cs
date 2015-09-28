@@ -31,6 +31,21 @@ namespace Teller.Core.Filedata
                     destinationPropertyFile);
 
             var destinationFileName = Path.Combine(destinationPath, Path.GetFileName(measurementFile.FullPath));
+            if (File.Exists(destinationFileName))
+            {
+                var i = 1;
+                string uniqueFilename;
+
+                do
+                {
+                    uniqueFilename = Path.Combine(destinationPath,
+                        Path.GetFileNameWithoutExtension(measurementFile.FullPath + "_" + i++.ToString() +
+                                                         Path.GetExtension(measurementFile.FullPath)));
+                } while (File.Exists(uniqueFilename));
+
+                destinationFileName = uniqueFilename;
+            }
+
             File.Move(measurementFile.FullPath, destinationFileName);
         }
 
