@@ -5,6 +5,8 @@ using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using Teller.Charts.Templates;
 using Teller.Charts.Viewmodels;
+using Teller.Core.Entities;
+using Teller.Core.Infrastructure;
 
 namespace Teller.Charts
 {
@@ -12,19 +14,21 @@ namespace Teller.Charts
     {
         private SingleMatchViewmodel _vm;
 
-        public void Render()
+        public void Render(BillettServiceEvent bsEvent)
         {
-            var ctrl = new SingleMatch {DataContext = _vm = new SingleMatchViewmodel()};
+            var ctrl = new SingleMatch {DataContext = _vm = new SingleMatchViewmodel(bsEvent)};
 
-            RenderAndSave(ctrl, @"d:\temp\staut\wpf-test.png", 460, 600);
+            var path = Path.Combine(StautConfiguration.Current.StaticImageDirectory, bsEvent.EventNumber + ".png");
+
+            RenderAndSave(ctrl, path, 460, 650);
         }
 
         void RenderAndSave(UIElement target, string filename, int width, int height)
         {
-            var mainContainer = new Grid
+            var mainContainer = new Canvas()
             {
-                HorizontalAlignment = HorizontalAlignment.Stretch,
-                VerticalAlignment = VerticalAlignment.Stretch
+                Width = width,
+                Height = height
             };
             mainContainer.Children.Add(target);
 
@@ -32,7 +36,11 @@ namespace Teller.Charts
             target.Arrange(new Rect(0, 0, width, height));
             target.UpdateLayout();
 
+            RenderOptions.SetClearTypeHint(target, ClearTypeHint.Enabled);
+            RenderOptions.SetBitmapScalingMode(target, BitmapScalingMode.Fant);
+
             var encoder = new PngBitmapEncoder();
+            
             var render = new RenderTargetBitmap(width, height, 96, 96, PixelFormats.Pbgra32);
 
             render.Render(target);

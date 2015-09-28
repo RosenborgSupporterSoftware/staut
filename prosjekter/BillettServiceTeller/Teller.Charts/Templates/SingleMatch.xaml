@@ -11,11 +11,18 @@
              FontFamily="Calibri"
              FontSize="15"
              Background="White"
-             TextOptions.TextFormattingMode="Display" 
+             TextOptions.TextFormattingMode="Ideal" 
              TextOptions.TextRenderingMode="ClearType"
              >
     <DockPanel>
-        <Grid Margin="3" 
+        <DockPanel.CacheMode>
+            <BitmapCache EnableClearType="True" 
+                         RenderAtScale="1"
+                         SnapsToDevicePixels="True"
+                         />
+        </DockPanel.CacheMode>
+        
+        <Grid Margin="1" 
               >
 
             <Grid.RowDefinitions>
@@ -23,76 +30,145 @@
                 <RowDefinition Height="Auto" />
                 <RowDefinition Height="*" />
                 <RowDefinition Height="Auto" />
+                <RowDefinition Height="Auto" />
             </Grid.RowDefinitions>
 
-            <TextBlock Grid.Row="0" 
-                       Text="{Binding Title}" 
-                       FontSize="30"
-                       FontFamily="Calibri"
-                       FontWeight="UltraBlack"
-                       TextOptions.TextFormattingMode="Display"
-                       TextAlignment="Center"
-                       />
-            <TextBlock Grid.Row="1" 
-                       Text="27/6-2015 kl. 20:00" 
-                       FontSize="20"
-                       TextOptions.TextFormattingMode="Ideal"
-                       TextAlignment="Center"
-                       />
+            <Grid Grid.Row="0"
+                  Height="120"
+                  >
 
-            <staut:StautChart Grid.Row="2" 
-                              Data="{Binding DataSeries}" />
-            
-            <Grid Grid.Row="3"
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="*" />
+                    <ColumnDefinition Width="*" />
+                </Grid.ColumnDefinitions>
+                
+                <Image Grid.Column="0" 
+                       Source="../Images/rbk.png"
+                       VerticalAlignment="Center"
+                       HorizontalAlignment="Center"
+                       RenderOptions.BitmapScalingMode="Fant"
+                       Opacity="0.4"
+                       Margin="5"
+                       >
+                    <Image.Effect>
+                        <BlurEffect KernelType="Gaussian" 
+                                    Radius="4" 
+                                    RenderingBias="Quality" 
+                                    />
+                    </Image.Effect>
+                </Image>
+
+                <Image Grid.Column="1" 
+                       Source="{Binding EnemyLogoPath}"
+                       VerticalAlignment="Bottom"
+                       HorizontalAlignment="Center"
+                       RenderOptions.BitmapScalingMode="Fant"
+                       Opacity="0.4"
+                       Margin="5"
+                       Width="150"
+                       >
+                    <Image.Effect>
+                        <BlurEffect KernelType="Gaussian" 
+                                    Radius="4" 
+                                    RenderingBias="Quality" 
+                                    />
+                    </Image.Effect>
+                </Image>
+
+            </Grid>
+
+            <Grid Grid.Row="0"
                   >
                 <Grid.RowDefinitions>
                     <RowDefinition Height="Auto" />
                     <RowDefinition Height="Auto" />
                     <RowDefinition Height="Auto" />
+                    <RowDefinition Height="Auto" />
                 </Grid.RowDefinitions>
+                
                 <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="*" />
                     <ColumnDefinition Width="Auto" />
                     <ColumnDefinition Width="*" />
                 </Grid.ColumnDefinitions>
 
-                <TextBlock Grid.Row="0" 
-                           Grid.Column="0"
-                           Text="Solgte billetter"
+               
+                <StackPanel Grid.Row="0" 
+                            Grid.ColumnSpan="3"
+                        Orientation="Horizontal"
+                        HorizontalAlignment="Center"
+                            Background="Transparent"
+                        >
+                    <TextBlock Text="Rosenborg" 
+                           FontSize="35"
+                           FontWeight="UltraBlack"
                            />
-                <TextBlock Grid.Row="0"
-                           Grid.Column="1" 
-                           Text="10500"
-                           FontFamily="Calibri"
-                           HorizontalAlignment="Right"
+
+                    <TextBlock Text="vs." 
+                           FontSize="35"
+                           Margin="10,0"
                            />
+
+                    <TextBlock Text="{Binding Opponent}" 
+                           FontSize="35"
+                           FontWeight="UltraLight"
+                           TextAlignment="Center"
+                           />
+                </StackPanel>
+
                 <TextBlock Grid.Row="1" 
-                           Grid.Column="0"
-                           Text="Sesongkort"
+                           Grid.Column="1"
+                           Text="{Binding Tournament}"
+                           FontSize="25"
+                           TextAlignment="Center"
                            />
-                <TextBlock Grid.Row="1"
-                           Grid.Column="1" 
-                           Text="8100"
-                           HorizontalAlignment="Right"
-                           />
-
-                
                 <TextBlock Grid.Row="2" 
-                           Grid.Column="0"
-                           Text="Tilskuere totalt"
-                           FontSize="20"
-                           VerticalAlignment="Bottom"
-                           FontFamily="Calibri"
+                           Grid.Column="1"
+                           Text="{Binding MatchStart}" 
+                           FontSize="25"
+                           TextAlignment="Center"
+                           
                            />
-                <TextBlock Grid.Row="2"
-                           Grid.Column="1" 
-                           Text="18600"
-                           FontSize="20"
-                           FontFamily="Calibri"
-                           TextOptions.TextFormattingMode="Ideal"
-                           HorizontalAlignment="Right"
+                
+                <TextBlock Grid.Row="3" 
+                           Grid.Column="1"
+                           Text="{Binding Location}" 
+                           FontSize="25"
+                           TextAlignment="Center"
                            />
-
+                
             </Grid>
+            
+            <staut:StautChart Grid.Row="2" 
+                              Data="{Binding DataSeries}" 
+                              FontFamily="Arial Narrow"
+                              FontSize="8"
+                              />
+
+            <TextBlock Grid.Row="3" 
+                       TextAlignment="Center"
+                       Text="{Binding UpdateTime}"
+                       />
+
+
+            <Grid Grid.Row="4">
+                
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="*" />
+                    <ColumnDefinition Width="Auto" />
+                </Grid.ColumnDefinitions>
+                
+                <Image Grid.Column="0" 
+                       Source="../Images/stautlogo.png"
+                       Margin="10"
+                       RenderOptions.BitmapScalingMode="Fant"
+                       />
+
+                <staut:SalesSummary Grid.Column="1" 
+                                    />
+                
+            </Grid>
+
         </Grid>
     </DockPanel>
 </UserControl>

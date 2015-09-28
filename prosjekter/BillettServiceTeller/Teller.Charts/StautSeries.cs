@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 
 namespace Teller.Charts
 {
@@ -8,6 +9,9 @@ namespace Teller.Charts
     public class StautSeries
     {
         public string Title { get; set; }
+
+        public DateTime Start { get; set; }
+
         public ICollection<StautPoint> Points { get; set; }
     }
 }
