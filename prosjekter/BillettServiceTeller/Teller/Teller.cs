@@ -34,6 +34,7 @@ namespace Teller
                     if (_opts.OutputOpptattFile)    Export<OpptattFile>(_opts.OpptattTextFile);
                     if (_opts.OutputXmlFile)        WriteXml();
                     if (_opts.PerformSeatQuery)     Export<SeatQuery>(_opts.SeatQuery);
+                    //Export<SeatQuery>("XA:24");
                     if (_opts.PrintCountSummary)    PrintCountSummary();
 
                     Print("Ingen gyldige outputs angitt.", _outputsUsed == 0);
