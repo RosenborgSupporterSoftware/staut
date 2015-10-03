@@ -14,13 +14,13 @@ namespace Teller.Charts
     {
         private SingleMatchViewmodel _vm;
 
-        public void Render(BillettServiceEvent bsEvent)
+        public void Render(BillettServiceEvent bsEvent, int width = 460, int height = 650)
         {
             var ctrl = new SingleMatch {DataContext = _vm = new SingleMatchViewmodel(bsEvent)};
 
             var path = Path.Combine(StautConfiguration.Current.StaticImageDirectory, bsEvent.EventNumber + ".png");
 
-            RenderAndSave(ctrl, path, 460, 650);
+            RenderAndSave(ctrl, path, width, height);
         }
 
         void RenderAndSave(UIElement target, string filename, int width, int height)
