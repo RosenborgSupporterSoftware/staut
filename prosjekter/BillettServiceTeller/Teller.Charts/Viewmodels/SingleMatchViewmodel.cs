@@ -100,14 +100,14 @@ namespace Teller.Charts.Viewmodels
                 Tournament = "Tippeligaen 2015";
             else if (bsEvent.Tournament == "NM")
                 Tournament = "Norgesmesterskapet 2015";
-            else if (bsEvent.Tournament == "EC")
+            else if (bsEvent.Tournament == "EC" || bsEvent.Tournament == "EL")
                 Tournament = "Europacup";
 
             Location = bsEvent.Location == "TLD" ? "Lerkendal Stadion" : "";
             _matchStart = bsEvent.Start;
             
             var logoPath = StautConfiguration.Current.LogoDirectory;
-            EnemyLogoPath = Path.Combine(logoPath, Opponent + ".png");
+            EnemyLogoPath = Path.Combine(logoPath, Opponent.Replace("/", "_") + ".png"); // Helvetes Bodø/Glimt.
             if (!File.Exists(EnemyLogoPath))
                 EnemyLogoPath = Path.Combine(logoPath, "NoLogo.png");
 
