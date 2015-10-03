@@ -11,6 +11,8 @@ public class EventInfo implements Comparable {
     public final static String LEAGUE_COMPETITION = "LEAGUE";
     public final static String CUP_COMPETITION = "NM";
     public final static String EC_COMPETITION = "EC";
+    public final static String EL_COMPETITION = "EL";
+    public final static String CL_COMPETITION = "CL";
     
     private final int eventId;
     private String eventName;
@@ -65,10 +67,23 @@ public class EventInfo implements Comparable {
             // Return everything from eventname after the -
             return eventName.split("-")[1].trim();
         } else {
-            // Return the first word from eventname after the -
-            // TODO: Specific handling for NM and EC games depending on what eventName looks like for those competitions.
-            return eventName.split("-")[1].trim().split("\\s+")[0];
+            if(eventName.contains("(")) { 
+                // We assume some extra information is added to event name, remove this
+                return eventName.split("-")[1].trim().split("\\(")[0].trim();
+            } else {
+                // Return the first word from eventname after the -
+                return eventName.split("-")[1].trim().split("\\s+")[0];
+            }
         }
+    }
+    
+    /**
+     * @return the opponent, but replacing / with empty string.
+     * Used for generating file names that will work on Windows.
+     */
+    public String getOpponentWithoutSlash() {
+        String opponent = getOpponent();
+        return opponent.replaceAll("/", "");
     }
 
     /**

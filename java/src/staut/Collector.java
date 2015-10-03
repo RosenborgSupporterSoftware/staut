@@ -122,12 +122,14 @@ public class Collector {
                         info.setAvailabilityURL(new URL(BASE_BILLETTSERVICE_URL + colonSplit[counter].split("\"")[1].replace("\\", "")));
                         String eventCode = info.getAvailabilityURL().getPath().split("/NO/")[1].split(",")[0];
                         info.setEventCode(eventCode);
-                        if(eventCode != null && eventCode.length() >=3) {
+                        String subCode = eventCode.split("-")[0];
+                        if(subCode != null && subCode.length() >=3) {
                             info.setLocation(eventCode.substring(0, 3));
                         }
-                        if(eventCode != null && eventCode.length() >=5) {
-                            String part2 = eventCode.substring(3, 5);
-                            if(eventCode.length() >= 8 && eventCode.substring(7,8).equals("N")) {
+                        if(subCode != null && subCode.length() >=5) {
+                            String part2 = subCode.substring(3, 5);
+                            String part3 =subCode.substring(5);
+                            if(subCode.length() >= 8 && subCode.substring(7,8).equals("N")) {
                                 // This is Norwegian cup.
                                 info.setCompetition(EventInfo.CUP_COMPETITION);
                                 info.setRound(0); // unknown
@@ -135,12 +137,18 @@ public class Collector {
                                 // This is a league game.
                                 info.setCompetition(EventInfo.LEAGUE_COMPETITION);
                                 info.setRound(Integer.parseInt(part2));
-                            } else if(eventCode.substring(3, 5).equals(EventInfo.EC_COMPETITION)){
+                            } else if(part2.equals(EventInfo.EC_COMPETITION)){
                                 // This is European cup.
                                 info.setCompetition(EventInfo.EC_COMPETITION);
-                                if(eventCode.length() >=7) {
-                                    info.setRound(Integer.parseInt(eventCode.substring(5,7)));
-                                }
+                                info.setRound(Integer.parseInt(part3));    
+                            } else if(part2.equals(EventInfo.EL_COMPETITION)){
+                                // This is Europa League
+                                info.setCompetition(EventInfo.EL_COMPETITION);
+                                info.setRound(Integer.parseInt(part3));
+                            } else if(part2.equals(EventInfo.CL_COMPETITION)){
+                                // This is Champions League
+                                info.setCompetition(EventInfo.CL_COMPETITION);
+                                info.setRound(Integer.parseInt(part3));
                             } else {
                                 info.setCompetition("unknown");
                                 info.setRound(0);
@@ -169,13 +177,13 @@ public class Collector {
 //        Ø = \u00D8
 //        å = \u00E5
 //        Å = \u00D5
-        String ret = orig.replace("\\u00e6", "æ");
-        ret = ret.replace("\\u00c6", "Æ");
-        ret = ret.replace("\\u00f8", "ø");
-        ret = ret.replace("\\u00d8", "Ø");
-        ret = ret.replace("\\u00e5", "å");
-        ret = ret.replace("\\u00d5", "Å");
-        return ret;
+        return orig.replace("\\u00e6", "æ").
+                replace("\\u00c6", "Æ").
+                replace("\\u00f8", "ø").
+                replace("\\u00d8", "Ø").
+                replace("\\u00e5", "å").
+                replace("\\u00d5", "Å").
+                replace("\\", "");
     }
     
     public static int download(URL url, File file) throws IOException {
@@ -203,7 +211,7 @@ public class Collector {
     
     public static File generateFileName(File dir, EventInfo info) {
         Date now = new Date();
-        return new File(dir, info.getEventId() + "_" + info.getOpponent() + "_" + dateFormat.format(now) + ".xml");
+        return new File(dir, info.getEventId() + "_" + info.getOpponentWithoutSlash() + "_" + dateFormat.format(now) + ".xml");
     }
     
 }

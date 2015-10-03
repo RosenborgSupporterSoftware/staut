@@ -22,7 +22,7 @@ public class CollectAvailabilityTask extends TimerTask {
                 info.getSeason() + "_" + 
                 info.getCompetition() + "_" +
                 info.getRound() + "_" +
-                info.getOpponent() + "_" + 
+                info.getOpponentWithoutSlash() + "_" + 
                 info.getEventId()
         );
     }
