@@ -4,6 +4,7 @@ using System.Collections.ObjectModel;
 using System.Globalization;
 using System.IO;
 using System.Linq;
+using Teller.Charts.Helpers;
 using Teller.Core.Entities;
 using Teller.Core.Infrastructure;
 
@@ -125,6 +126,8 @@ namespace Teller.Charts.Viewmodels
                                     .First()
                                     .MeasurementTime;
 
+            var reducedMeasurements = new PointReducer().Reduce(bsEvent.Measurements);
+
             DataSeries = new ObservableCollection<StautSeries>
             {
                 new StautSeries
@@ -133,7 +136,7 @@ namespace Teller.Charts.Viewmodels
                     Start = bsEvent.Start,
                     Points =
                         new List<StautPoint>(
-                            bsEvent.Measurements
+                            reducedMeasurements
                                    .Where(m => m.TotalAmountSold > 0)
                                    .Select(
                                 m =>

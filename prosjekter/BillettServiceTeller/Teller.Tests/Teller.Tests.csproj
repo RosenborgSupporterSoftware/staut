@@ -64,6 +64,7 @@
     <Compile Include="BillettService\EventInfoPropertyReaderTests.cs" />
     <Compile Include="BillettService\MiscellaneousDataQueries.cs" />
     <Compile Include="BillettService\SeatDiffGeneratorTests.cs" />
+    <Compile Include="Charts\Helpers\PointReducerTests.cs" />
     <Compile Include="Entities\EttCodeTests.cs" />
     <Compile Include="Entities\MeasurementFileTests.cs" />
     <Compile Include="Entities\StadiumPositionTests.cs" />
@@ -75,6 +76,10 @@
     <None Include="packages.config" />
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="..\Teller.Charts\Teller.Charts.csproj">
+      <Project>{ADD9F067-DFB2-45AE-A749-D7817859B49F}</Project>
+      <Name>Teller.Charts</Name>
+    </ProjectReference>
     <ProjectReference Include="..\Teller.Core\Teller.Core.csproj">
       <Project>{cbb3cd1f-30ba-41b8-81e0-ccc74b1fe424}</Project>
       <Name>Teller.Core</Name>
