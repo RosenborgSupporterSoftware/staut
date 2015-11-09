@@ -1,6 +1,10 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Threading.Tasks;
 using System.Web.Http;
+using AutoMapper;
+using StautApi.Models;
+using Teller.Core.Entities;
 using Teller.Core.Repository;
 
 namespace StautApi.Controllers
@@ -25,11 +29,11 @@ namespace StautApi.Controllers
                 {
                     var result = _eventRepository.GetAll();
                   
-                    return Ok(result);
+                    return Ok(Mapper.Map<IEnumerable<EventDto>>(result));
                 }
                 catch (Exception ex)
                 {
-                    return BadRequest(ex.Message);
+                    return InternalServerError(ex);
                 }
             });
         }
@@ -44,15 +48,15 @@ namespace StautApi.Controllers
                 {
                     var result = _eventRepository.GetByYear(year);
 
-                    return Ok(result);
+                    return Ok(Mapper.Map<IEnumerable<EventDto>>(result));
                 }
                 catch (Exception ex)
                 {
-                    return BadRequest(ex.Message);
+                    return InternalServerError(ex);
                 }
             });
         }
-
+    
         [Route("{id:long}")]
         [HttpGet]
         public async Task<IHttpActionResult> GetEvent(long id)
@@ -65,17 +69,59 @@ namespace StautApi.Controllers
                     if (result == null)
                         return NotFound();
 
-                    return Ok(result);
+                    return Ok(Mapper.Map<EventDto>(result));
                 }
                 catch (Exception ex)
                 {
-                    return BadRequest(ex.Message);
+                    return InternalServerError(ex);
                 }
             });
         }
 
+        [Route("")]
+        [HttpPost]
+        public async Task<IHttpActionResult> CreateEvent(CreateEvent @event)
+        {
+            return await Task.Factory.StartNew<IHttpActionResult>(() =>
+            {
+                try
+                {
+                    var e = Mapper.Map<BillettServiceEvent>(@event);
+                    _eventRepository.Store(e);
 
+                    return Ok();
+                }
+                catch (Exception ex)
+                {
+                    return InternalServerError(ex);
+                }
+            });
+        }
+
+        [Route("{id:long}/measurement")]
+        [HttpPost]
+        public async Task<IHttpActionResult> AddMeasurement(long id, Models.CreateMeasurement measurement)
+        {
+            return await Task.Factory.StartNew<IHttpActionResult>(() =>
+            {
+                try
+                {
+                    var e = _eventRepository.Get(id);
+                    if (e == null)
+                        return NotFound();
+
+                    var m = Mapper.Map<Teller.Core.Entities.Measurement>(measurement);
+                    e.Measurements.Add(m);
+
+                    _eventRepository.SaveChanges();
+
+                    return Ok();
+                }
+                catch (Exception ex)
+                {
+                    return InternalServerError(ex);
+                }
+            });
+        } 
     }
-
-
 }

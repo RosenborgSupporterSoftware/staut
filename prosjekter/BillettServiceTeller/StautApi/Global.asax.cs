@@ -9,6 +9,7 @@ namespace StautApi
         {
             GlobalConfiguration.Configure(WebApiConfig.Register);
             GlobalConfiguration.Configure(IocConfig.Bootstrap);
+            MapperConfig.Configure();
         }
     }
 }

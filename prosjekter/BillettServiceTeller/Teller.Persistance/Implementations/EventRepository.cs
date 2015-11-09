@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Data.Entity;
 using Teller.Core.Entities;
 using Teller.Core.Repository;
 
@@ -18,7 +19,7 @@ namespace Teller.Persistance.Implementations
 
         public BillettServiceEvent Get(long id)
         {
-            return _context.Events.Find(id);
+            return _context.Events.Include(e => e.Measurements).FirstOrDefault(e => e.Id == id);
         }
 
         public IEnumerable<BillettServiceEvent> GetAll()

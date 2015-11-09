@@ -9,6 +9,7 @@ using Teller.Core.Entities;
 using Teller.Core.Repository;
 using Teller.Persistance;
 using Teller.Persistance.Implementations;
+using Measurement = Teller.Core.Entities.Measurement;
 
 namespace StautApi
 {
@@ -20,12 +21,12 @@ namespace StautApi
             builder.RegisterApiControllers(Assembly.GetExecutingAssembly());
 
             // Dummy implementation
-            builder.RegisterType<DummyEventRepo>().As<IEventRepository>().InstancePerLifetimeScope();
+            //builder.RegisterType<DummyEventRepo>().As<IEventRepository>().InstancePerLifetimeScope();
 
             // Real implementation
-            //builder.RegisterType<EventRepository>().As<IEventRepository>().InstancePerLifetimeScope();
-            //builder.RegisterType<MeasurementRepository>().As<IMeasurementRepository>().InstancePerLifetimeScope();
-            //builder.RegisterType<TellerContext>().InstancePerLifetimeScope();
+            builder.RegisterType<EventRepository>().As<IEventRepository>().InstancePerLifetimeScope();
+            builder.RegisterType<MeasurementRepository>().As<IMeasurementRepository>().InstancePerLifetimeScope();
+            builder.RegisterType<TellerContext>().InstancePerLifetimeScope();
             var container = builder.Build();
 
             config.DependencyResolver = new AutofacWebApiDependencyResolver(container);

@@ -6,7 +6,7 @@ namespace Teller.Core.Entities
     /// <summary>
     /// En klasse som representerer en BillettService-"event" - i praksis en kamp for vår del
     /// </summary>
-    public class BillettServiceEvent
+    public class    BillettServiceEvent
     {
         #region Properties
 
