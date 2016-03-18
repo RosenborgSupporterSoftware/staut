@@ -75,7 +75,22 @@ namespace Teller.Core.BillettService
                 "593",
                 "5C4",
                 "5CC",
-                "4F9"
+                "4F9",
+
+                // Test i forbindelse med seriestart 2016
+                "5FD",
+                "5FB",
+                "5FA",
+                "5F4",
+                "5F5",
+                "5F8",
+                "46C",
+                "5F6",
+                "40E",
+                "5F9",
+                "5F7",
+                "5FC"
+                // Slutt på seriestart-test
             };
 
             return knownSeasonCodes.Contains(code.QualifierBitsHex);
