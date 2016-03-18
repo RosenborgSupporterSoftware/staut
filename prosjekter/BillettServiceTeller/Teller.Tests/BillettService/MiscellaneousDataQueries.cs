@@ -199,7 +199,7 @@ namespace Teller.Tests.BillettService
         public void Plasser_hos_Kjernen()
         {
             var sut = new BillettServiceSeteLeser();
-            var file = BillettServiceXmlFile.LoadFile(@"..\..\TestData\RBK-Glimt-020615-2048.xml");
+            var file = BillettServiceXmlFile.LoadFile(@"D:\temp\staut\data\Godset-160301-1002.xml");
             var res = sut.ReadSeats(file).ToList();
 
             var allRelevantCodes = res.Where(s => s.SectionName.Contains("KJ"))
@@ -214,7 +214,7 @@ namespace Teller.Tests.BillettService
         public void Status_Plasser_hos_Kjernen()
         {
             var sut = new BillettServiceSeteLeser();
-            var file = BillettServiceXmlFile.LoadFile(@"..\..\TestData\RBK-mfk-150615-0913.xml");
+            var file = BillettServiceXmlFile.LoadFile(@"D:\temp\staut\data\Godset-160301-1002.xml");
             var res = sut.ReadSeats(file).ToList();
 
             var allRelevantCodes = res.Where(s => s.SectionName.Contains("KJ"))
@@ -297,6 +297,51 @@ namespace Teller.Tests.BillettService
             // Act
             Console.WriteLine("Res: ", stats.Count);
             // Assert
+        }
+
+        [Fact]
+        public void Koder_etter_antall_inkl_hvordan_vi_oppfatter_dem()
+        {
+            var sut = new BillettServiceSeteLeser();
+            var file = BillettServiceXmlFile.LoadFile(@"D:\temp\staut\data\Godset-160301-1002.xml");
+            var res = sut.ReadSeats(file).ToList();
+
+            var byCode = res.GroupBy(s => s.EttCode.Code)
+                            .Select(
+                                g =>
+                                    new
+                                    {
+                                        Code = g.Key,
+                                        Count = g.Count(),
+                                        Classification = SeatStatusClassifier.Classify(g.Key)
+                                    })
+                            .Where(g => g.Classification == SeatStatus.Sold)
+                            .OrderByDescending(s => s.Count);
+
+            var builder = new StringBuilder();
+
+            foreach (var code in byCode)
+            {
+                builder.AppendLine(code.Code + ": " + code.Count + "stk. - " + code.Classification);
+
+            }
+            var output = builder.ToString();
+
+            Console.WriteLine(output);
+        }
+
+        [Fact]
+        public void Sum_SolgteOgSesongkort_HeleStadion()
+        {
+            var sut = new BillettServiceSeteLeser();
+            var file = BillettServiceXmlFile.LoadFile(@"D:\temp\staut\data\Godset-160309-1300.xml");
+            var res = sut.ReadSeats(file).ToList();
+
+            var sold = res.Select(s => SeatStatusClassifier.Classify(s.EttCode))
+                          .Where(s => s == SeatStatus.SeasonTicket || s == SeatStatus.Sold)
+                          .Count();
+
+             Console.WriteLine(sold);
         }
 
 
