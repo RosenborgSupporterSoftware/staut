@@ -24,7 +24,6 @@ namespace Teller.Charts.Helpers
             {
                 if (measurement.TotalAmountSold != lastValue)
                 {
-                    // Ny verdi. Do the stuff.
                     if (candidate != null)
                     {
                         yield return candidate;
