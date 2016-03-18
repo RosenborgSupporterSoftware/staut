@@ -143,6 +143,7 @@
                               Data="{Binding DataSeries}" 
                               FontFamily="Arial Narrow"
                               FontSize="8"
+                              Opacity="1"
                               />
 
             <TextBlock Grid.Row="3" 
