@@ -13,7 +13,7 @@ namespace RBKweb.Integration.Test
         public async void Login_WhenGivenCorrectUsernameAndPassword_ShouldWork()
         {
             // Arrange
-            var sut = new RBKwebConnection("OrionPax", "cgFMGUlt1rjdjz8h1WWg");
+            var sut = new RBKwebConnection("OrionPax", "oops. bytta passord. :)");
 
             // Act
             var res = await sut.Login();
