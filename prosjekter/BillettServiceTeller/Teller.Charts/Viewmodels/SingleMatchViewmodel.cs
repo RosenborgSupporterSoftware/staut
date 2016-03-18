@@ -98,9 +98,9 @@ namespace Teller.Charts.Viewmodels
         {
             Opponent = bsEvent.Opponent;
             if (bsEvent.Tournament == "LEAGUE")
-                Tournament = "Tippeligaen 2015";
+                Tournament = "Tippeligaen " + bsEvent.Start.Year;
             else if (bsEvent.Tournament == "NM")
-                Tournament = "Norgesmesterskapet 2015";
+                Tournament = "Norgesmesterskapet " + bsEvent.Start.Year;
             else if (bsEvent.Tournament == "EC" || bsEvent.Tournament == "EL")
                 Tournament = "Europacup";
 
