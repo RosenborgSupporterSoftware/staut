@@ -31,7 +31,7 @@ import java.util.concurrent.TimeUnit;
 public class Collector {
     
     private static final SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd'T'HH-mm");
-    private static final String BASE_BILLETTSERVICE_URL = "http://www.billettservice.no";
+    private static final String BASE_BILLETTSERVICE_URL = "http://www.ticketmaster.no";
     private static final String BASE_EVENT_PAGE_URL = BASE_BILLETTSERVICE_URL + "/event/";
     private static final String LERKENDAL_URL = BASE_BILLETTSERVICE_URL + "/venue/lerkendal-stadion-trondheim-billetter/TLD/25?attractions=100563";
     
