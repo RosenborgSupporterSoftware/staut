@@ -49,6 +49,7 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Implementations\ChatMessageRepository.cs" />
     <Compile Include="Implementations\EventRepository.cs" />
     <Compile Include="Implementations\MeasurementRepository.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />

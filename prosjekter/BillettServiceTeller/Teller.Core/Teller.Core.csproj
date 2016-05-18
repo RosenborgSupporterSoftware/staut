@@ -66,6 +66,7 @@
     <Compile Include="BillettService\SeatDiffGenerator.cs" />
     <Compile Include="BillettService\SeatStatusClassifier.cs" />
     <Compile Include="BillettService\SeatSummary.cs" />
+    <Compile Include="Entities\ChatMessage.cs" />
     <Compile Include="Entities\EttCode.cs" />
     <Compile Include="Entities\Measurement.cs" />
     <Compile Include="Entities\MeasurementFile.cs" />
@@ -94,6 +95,7 @@
     <Compile Include="Ingestion\MeasurementIngestor.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Filedata\IEventDataFetcher.cs" />
+    <Compile Include="Repository\IChatMessageRepository.cs" />
     <Compile Include="Repository\IEventRepository.cs" />
     <Compile Include="Filedata\IMeasurementReader.cs" />
     <Compile Include="Repository\IMeasurementRepository.cs" />
