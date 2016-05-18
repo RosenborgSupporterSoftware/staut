@@ -1,8 +1,5 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using FluentAssertions;
 using Teller.Core.Entities;
 using Xunit;
@@ -111,6 +108,7 @@ namespace Teller.Tests.Entities
         public void Code_WhenGivenTypicalEttCode_ReturnsExpectedValue()
         {
             // Arrange
+            // "000004C80001" == 00000000 00000000 00000100 11001000 00000000 00000001
             const string ettCode = "000004C70001";
             var sut = new EttCode(ettCode);
 

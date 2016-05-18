@@ -97,7 +97,6 @@ namespace Teller.Tests.BillettService
             Console.WriteLine(moro);
         }
 
-
         [Fact]
         public void vennebillett_stuff_test()
         {
@@ -250,7 +249,7 @@ namespace Teller.Tests.BillettService
         public void Hvor_ErDet_Ledig()
         {
             var sut = new BillettServiceSeteLeser();
-            var file = BillettServiceXmlFile.LoadFile(@"..\..\TestData\RBK-mfk-160615-0953.xml");
+            var file = BillettServiceXmlFile.LoadFile(@"D:\temp\staut\data\Lillestrøm-160509-1351.xml");
             var res = sut.ReadSeats(file).ToList();
 
             var freeSeats = res.Where(s => SeatStatusClassifier.Classify(s.EttCode) == SeatStatus.AvailableForPurchase)
@@ -303,7 +302,7 @@ namespace Teller.Tests.BillettService
         public void Koder_etter_antall_inkl_hvordan_vi_oppfatter_dem()
         {
             var sut = new BillettServiceSeteLeser();
-            var file = BillettServiceXmlFile.LoadFile(@"D:\temp\staut\data\Godset-160301-1002.xml");
+            var file = BillettServiceXmlFile.LoadFile(@"\\192.168.1.2\e$\staut\java\storage\2016\4\2016_LEAGUE_2_Aalesund_476955\476955_Aalesund_2016-04-10T19-01.xml");
             var res = sut.ReadSeats(file).ToList();
 
             var byCode = res.GroupBy(s => s.EttCode.Code)
@@ -315,7 +314,7 @@ namespace Teller.Tests.BillettService
                                         Count = g.Count(),
                                         Classification = SeatStatusClassifier.Classify(g.Key)
                                     })
-                            .Where(g => g.Classification == SeatStatus.Sold)
+                            //.Where(g => g.Classification == SeatStatus.Sold)
                             .OrderByDescending(s => s.Count);
 
             var builder = new StringBuilder();
@@ -331,6 +330,47 @@ namespace Teller.Tests.BillettService
         }
 
         [Fact]
+        public void SolgtOgSesongkort_FraDatafil_Oppsummering()
+        {
+            var sut = new BillettServiceSeteLeser();
+            var file = BillettServiceXmlFile.LoadFile(@"\\192.168.1.2\e$\staut\java\storage\2016\4\2016_LEAGUE_2_Aalesund_476955\476955_Aalesund_2016-04-10T19-01.xml");
+            var res = sut.ReadSeats(file).ToList();
+
+            var byStatus = res.GroupBy(s => SeatStatusClassifier.Classify(s.EttCode))
+                              .Select(g => new
+                              {
+                                  Status = g.Key,
+                                  Count = g.Count()
+                              })
+                              .ToList();
+
+            Console.WriteLine(byStatus.Count);
+        }
+
+        [Fact]
+        public void ByTheNumbers()
+        {
+            var sut = new BillettServiceSeteLeser();
+            var file = BillettServiceXmlFile.LoadFile(@"\\192.168.1.2\e$\staut\java\storage\2016\4\2016_LEAGUE_2_Aalesund_476955\476955_Aalesund_2016-04-10T19-01.xml");
+            var res = sut.ReadSeats(file).ToList();
+
+            var byStatus = res.Select(s => new { Code = s.EttCode.Code, Tall = s.EttCode.QualifierBits})
+                              .GroupBy(s => s.Tall)
+                              .Select(g => new
+                              {
+                                  Code = g.Key,
+                                  Count = g.Count()
+                              })
+                              .Where(e => e.Code >= 1000 && e.Code <= 2000)
+                              .ToList();
+
+            var sum = byStatus.Sum(i => i.Count);
+
+            Console.WriteLine(byStatus.Count);
+        }
+
+
+        [Fact]
         public void Sum_SolgteOgSesongkort_HeleStadion()
         {
             var sut = new BillettServiceSeteLeser();
@@ -344,6 +384,69 @@ namespace Teller.Tests.BillettService
              Console.WriteLine(sold);
         }
 
+        [Fact]
+        public void Status_SB()
+        {
+            var sut = new BillettServiceSeteLeser();
+            var file = BillettServiceXmlFile.LoadFile(@"D:\temp\staut\data\Lillestrøm-160509-1351.xml");
+            var res = sut.ReadSeats(file).ToList();
+
+            var byCode = res.Where(s => s.SectionName.Contains("SB"))
+                            .GroupBy(s => s.EttCode.Code)
+                            .Select(
+                                g =>
+                                    new
+                                    {
+                                        Code = g.Key,
+                                        Count = g.Count(),
+                                        Classification = SeatStatusClassifier.Classify(g.Key)
+                                    })
+                            //.Where(g => g.Classification == SeatStatus.Sold)
+                            .OrderByDescending(s => s.Count);
+
+            var builder = new StringBuilder();
+
+            foreach (var code in byCode)
+            {
+                builder.AppendLine(code.Code + ": " + code.Count + "stk. - " + code.Classification);
+
+            }
+            var output = builder.ToString();
+
+            Console.WriteLine(output);
+        }
+
+        [Fact]
+        public void Status_RB()
+        {
+            var sut = new BillettServiceSeteLeser();
+            var file = BillettServiceXmlFile.LoadFile(@"D:\temp\staut\data\Lillestrøm-160509-1351.xml");
+            var res = sut.ReadSeats(file).ToList();
+
+            var byCode = res.Where(s => s.SectionName.Contains("RB"))
+                            .GroupBy(s => s.EttCode.Code)
+                            .Select(
+                                g =>
+                                    new
+                                    {
+                                        Code = g.Key,
+                                        Count = g.Count(),
+                                        Classification = SeatStatusClassifier.Classify(g.Key)
+                                    })
+                            //.Where(g => g.Classification == SeatStatus.Sold)
+                            .OrderByDescending(s => s.Count);
+
+            var builder = new StringBuilder();
+
+            foreach (var code in byCode)
+            {
+                builder.AppendLine(code.Code + ": " + code.Count + "stk. - " + code.Classification);
+
+            }
+            var output = builder.ToString();
+
+            Console.WriteLine(output);
+        }
 
     }
 }
