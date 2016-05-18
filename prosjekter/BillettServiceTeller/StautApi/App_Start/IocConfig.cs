@@ -29,6 +29,7 @@ namespace StautApi
             // Real implementation
             builder.RegisterType<EventRepository>().As<IEventRepository>().InstancePerLifetimeScope();
             builder.RegisterType<MeasurementRepository>().As<IMeasurementRepository>().InstancePerLifetimeScope();
+            builder.RegisterType<ChatMessageRepository>().As<IChatMessageRepository>().InstancePerLifetimeScope();
             builder.RegisterType<TellerContext>().InstancePerLifetimeScope();
 
             builder.RegisterInstance(mapperConfig).As<MapperConfiguration>();

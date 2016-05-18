@@ -5,7 +5,7 @@ using Teller.Core.Entities;
 namespace StautApi
 {
 
-    // TODO: Siden AutoMapper ikke lenger er statisk, finn ut hvordan vi skal få dette inn i controllerne. Sannsynligvis via dependency injection.
+    // TODO: Siden AutoMapper ikke lenger er statisk, finn ut hvordan vi skal fï¿½ dette inn i controllerne. Sannsynligvis via dependency injection.
 
     public static class MapperConfig
     {

@@ -9,7 +9,8 @@ using Teller.Core.Repository;
 
 namespace StautApi.Controllers
 {
-    [RoutePrefix("api/event")]
+    // runej@20032016: Bruker litt andre router for å gjøre dette mer spiselig for Ember.
+    [RoutePrefix("api/matches")]
     public class EventController : ApiController
     {
         private readonly IEventRepository _eventRepository;
@@ -28,8 +29,12 @@ namespace StautApi.Controllers
                 try
                 {
                     var result = _eventRepository.GetAll();
+
+                    var data = Mapper.Map<IEnumerable<MatchDto>>(result);
+
+                    var returnValue = new { matches = data};
                   
-                    return Ok(Mapper.Map<IEnumerable<EventDto>>(result));
+                    return Ok(returnValue);
                 }
                 catch (Exception ex)
                 {
