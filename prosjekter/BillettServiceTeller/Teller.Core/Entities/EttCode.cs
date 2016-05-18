@@ -51,6 +51,11 @@ namespace Teller.Core.Entities
         /// </summary>
         public string Code { get { return String.Format("{0:X8}{1:X2}{2:X2}", _qualifierBits, _seatFlags, _baseType); } }
 
+        /// <summary>
+        /// Få den delen av QualifierBits som vi mistenker relaterer til å skille på sesongkort og enkeltbilletter, basert på tester fra jubajuba
+        /// </summary>
+        public int JubaFlags { get {  return (QualifierBits >> 7) & 15; } }
+
         public EttCode(string ettCode)
         {
             if(String.IsNullOrWhiteSpace(ettCode))
