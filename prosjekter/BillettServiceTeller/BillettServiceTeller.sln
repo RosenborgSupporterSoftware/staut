@@ -1,7 +1,7 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
-# Visual Studio 2013
-VisualStudioVersion = 12.0.31101.0
+# Visual Studio 14
+VisualStudioVersion = 14.0.25123.0
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Teller.Core", "Teller.Core\Teller.Core.csproj", "{CBB3CD1F-30BA-41B8-81E0-CCC74B1FE424}"
 EndProject
@@ -31,6 +31,8 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = ".nuget", ".nuget", "{9AD9A2
 	EndProjectSection
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Teller.Charts", "Teller.Charts\Teller.Charts.csproj", "{ADD9F067-DFB2-45AE-A749-D7817859B49F}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "PowerSTAut", "PowerSTAut\PowerSTAut.csproj", "{24F7E95F-5622-4150-8D38-53EAD03DE765}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -66,6 +68,10 @@ Global
 		{ADD9F067-DFB2-45AE-A749-D7817859B49F}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{ADD9F067-DFB2-45AE-A749-D7817859B49F}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{ADD9F067-DFB2-45AE-A749-D7817859B49F}.Release|Any CPU.Build.0 = Release|Any CPU
+		{24F7E95F-5622-4150-8D38-53EAD03DE765}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{24F7E95F-5622-4150-8D38-53EAD03DE765}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{24F7E95F-5622-4150-8D38-53EAD03DE765}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{24F7E95F-5622-4150-8D38-53EAD03DE765}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -78,5 +84,6 @@ Global
 		{E601130F-CF8D-4FCB-BB5B-664ADEDF55B9} = {D6468D86-C044-4744-BF71-0CAF5625F1EF}
 		{B9FC3E0F-A025-4755-BD77-C8AE068C7643} = {25685C02-691A-4FA3-A6B8-DE0F8347AD5C}
 		{ADD9F067-DFB2-45AE-A749-D7817859B49F} = {6894BD97-9861-42B0-9647-3175E9AA0075}
+		{24F7E95F-5622-4150-8D38-53EAD03DE765} = {6894BD97-9861-42B0-9647-3175E9AA0075}
 	EndGlobalSection
 EndGlobal
