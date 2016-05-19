@@ -81,6 +81,7 @@
     <Compile Include="Export\IExporter.cs" />
     <Compile Include="Export\SoldTextSummary.cs" />
     <Compile Include="Extensions\PathExtensions.cs" />
+    <Compile Include="Extensions\StringExtensions.cs" />
     <Compile Include="Filedata\FileArchiver.cs" />
     <Compile Include="Filedata\FilesystemEventDataFetcher.cs" />
     <Compile Include="Filedata\ICleanupOperation.cs" />
