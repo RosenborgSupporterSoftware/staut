@@ -38,6 +38,10 @@
     <Reference Include="Ionic.Zip">
       <HintPath>..\packages\DotNetZip.1.9.3\lib\net20\Ionic.Zip.dll</HintPath>
     </Reference>
+    <Reference Include="Newtonsoft.Json, Version=9.0.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed, processorArchitecture=MSIL">
+      <HintPath>..\packages\Newtonsoft.Json.9.0.1\lib\net45\Newtonsoft.Json.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
     <Reference Include="System" />
     <Reference Include="System.Configuration" />
     <Reference Include="System.Core" />
@@ -60,6 +64,15 @@
     <Compile Include="BillettService\BillettServiceSeteLeser.cs" />
     <Compile Include="BillettService\BillettServiceXmlFile.cs" />
     <Compile Include="BillettService\EventInfoPropertyReader.cs" />
+    <Compile Include="Classification\ClassificationRuleField.cs" />
+    <Compile Include="Classification\Operators\ClassificationOperatorAttribute.cs" />
+    <Compile Include="Classification\Operators\EqualsOperator.cs" />
+    <Compile Include="Classification\Operators\GreaterThanOperator.cs" />
+    <Compile Include="Classification\Operators\IClassificationOperator.cs" />
+    <Compile Include="Classification\Operators\OperatorManager.cs" />
+    <Compile Include="Classification\SeatClassificationEngine.cs" />
+    <Compile Include="Classification\SeatClassificationFile.cs" />
+    <Compile Include="Classification\SeatClassificationRule.cs" />
     <Compile Include="BillettService\SummaryGenerator.cs" />
     <Compile Include="Entities\BillettServiceEvent.cs" />
     <Compile Include="BillettService\SeatChange.cs" />

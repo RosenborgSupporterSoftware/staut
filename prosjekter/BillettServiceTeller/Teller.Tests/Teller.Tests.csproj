@@ -74,6 +74,11 @@
     <Compile Include="BillettService\MiscellaneousDataQueries.cs" />
     <Compile Include="BillettService\SeatDiffGeneratorTests.cs" />
     <Compile Include="Charts\Helpers\PointReducerTests.cs" />
+    <Compile Include="Classification\Operators\GreaterThanOperatorTests.cs" />
+    <Compile Include="Classification\Operators\OperatorManagerTests.cs" />
+    <Compile Include="Classification\SeatClassificationEngineTests.cs" />
+    <Compile Include="Classification\SeatClassificationFileTests.cs" />
+    <Compile Include="Classification\SeatClassificationRuleTests.cs" />
     <Compile Include="Entities\EttCodeTests.cs" />
     <Compile Include="Entities\MeasurementFileTests.cs" />
     <Compile Include="Entities\StadiumPositionTests.cs" />
