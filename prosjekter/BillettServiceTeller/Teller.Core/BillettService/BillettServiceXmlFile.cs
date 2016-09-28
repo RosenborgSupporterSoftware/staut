@@ -32,6 +32,7 @@ namespace Teller.Core.BillettService
 
         #region Static stuff
 
+        /// <exception cref="ArgumentException">Ugyldig filangivelse</exception>
         public static BillettServiceXmlFile LoadFile(string filePath)
         {
             if (String.IsNullOrWhiteSpace(filePath) || !File.Exists(filePath))
@@ -58,7 +59,7 @@ namespace Teller.Core.BillettService
             }
             catch (Exception e)
             {
-                throw new ArgumentException("Ugyldig filangivelse - kan ikke tolke fil som XML");
+                throw new ArgumentException("Ugyldig filangivelse - kan ikke tolke fil som XML", e);
             }
             if (xml.Root == null)
                 throw new ArgumentException("Ugyldig filangivelse - finner ikke rot-element i XML");
