@@ -13,7 +13,10 @@ namespace Teller.Core.BillettService
 
             if(code.BaseTypeHex == "1E")
                 return SeatStatus.HeldByTicketMasterApplication;
-            
+
+            if (IsKnownBorteSvinCode(code))
+                return SeatStatus.Bortesvin;
+
             if(IsKnownSeasonTicketCode(code))
                 return SeatStatus.SeasonTicket;
 
@@ -104,6 +107,23 @@ namespace Teller.Core.BillettService
 
             //if (code.QualifierBitsHex == "413") // hoboj0e sesongkort familierabatt 1
             //    return true;
+        }
+
+        public static bool IsKnownBorteSvinCode(EttCode code)
+        {
+            // 4060001,4230001,4240001,46a0001
+            if (code.QualifierBitsHex == "406")
+                return true;
+            if (code.QualifierBitsHex == "423")
+                return true;
+            if (code.QualifierBitsHex == "424")
+                return true;
+            if (code.QualifierBitsHex == "46A")
+                return true;
+            if (code.QualifierBitsHex == "465")
+                return true;
+
+            return false;
         }
 
         public static bool IsKnownSoldCode(EttCode code)
