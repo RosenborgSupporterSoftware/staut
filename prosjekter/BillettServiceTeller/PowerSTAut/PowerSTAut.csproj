@@ -45,9 +45,16 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="FilterSeats.cs" />
-    <Compile Include="ReadSeats.cs" />
+    <Compile Include="Commandlets\AddClassificationRule.cs" />
+    <Compile Include="Commandlets\FilterSeats.cs" />
+    <Compile Include="Commandlets\GetSeatDiff.cs" />
+    <Compile Include="Commandlets\ReadSeats.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Seat.cs" />
+    <Compile Include="SeatCodeSummary.cs" />
+    <Compile Include="Commandlets\ShowSeatSummary.cs" />
+    <Compile Include="SeatSectionSummary.cs" />
+    <Compile Include="SeatStatusSummary.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />

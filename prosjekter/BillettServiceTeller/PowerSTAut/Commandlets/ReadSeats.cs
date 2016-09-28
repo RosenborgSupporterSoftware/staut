@@ -1,9 +1,8 @@
-﻿using System;
-using System.Linq;
+﻿using System.Linq;
 using System.Management.Automation;
 using Teller.Core.BillettService;
 
-namespace PowerSTAut
+namespace PowerSTAut.Commandlets
 {
     [Cmdlet(VerbsCommunications.Read, "Seats")]
     public class ReadSeats : PSCmdlet
@@ -26,16 +25,14 @@ namespace PowerSTAut
             var file = BillettServiceXmlFile.LoadFile(_filename);
             var seats = reader.ReadSeats(file).ToList();
 
-            // TODO: Do the thing with the stuff.
             WriteVerbose("Antall seter: " + seats.Count);
 
             try
             {
-                WriteObject(seats, true);
+                WriteObject(seats.Select(s => new Seat(s)), true);
             }
             catch (PipelineStoppedException e)
             {
-                //WriteVerbose("Got exception while writing seats to stream: " + e.Message);
             }
         }
 
