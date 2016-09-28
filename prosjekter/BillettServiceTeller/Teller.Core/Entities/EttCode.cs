@@ -13,6 +13,7 @@ namespace Teller.Core.Entities
         private readonly int _qualifierBits;
         private readonly int _seatFlags;
         private readonly int _baseType;
+        private readonly int _codeValue;
 
         #endregion
 
@@ -52,6 +53,11 @@ namespace Teller.Core.Entities
         public string Code { get { return String.Format("{0:X8}{1:X2}{2:X2}", _qualifierBits, _seatFlags, _baseType); } }
 
         /// <summary>
+        /// Få den numeriske verdien av ETT-koden
+        /// </summary>
+        public int CodeValue { get { return _codeValue; } }
+
+        /// <summary>
         /// Få den delen av QualifierBits som vi mistenker relaterer til å skille på sesongkort og enkeltbilletter, basert på tester fra jubajuba
         /// </summary>
         public int JubaFlags { get {  return (QualifierBits >> 7) & 15; } }
@@ -66,6 +72,7 @@ namespace Teller.Core.Entities
             _qualifierBits = int.Parse(ettCode.Substring(0, 8), NumberStyles.HexNumber);
             _seatFlags = int.Parse(ettCode.Substring(8, 2), NumberStyles.HexNumber);
             _baseType = int.Parse(ettCode.Substring(10, 2), NumberStyles.HexNumber);
+            _codeValue = int.Parse(ettCode, NumberStyles.HexNumber);
         }
 
         private static string FormatEttCode(string ettCode)
