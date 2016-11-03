@@ -120,9 +120,10 @@ public class Collector {
                     } else if(prop.contains("availabilityURL")) {
                         foundAvailabilityData = true;
                         info.setAvailabilityURL(new URL(BASE_BILLETTSERVICE_URL + colonSplit[counter].split("\"")[1].replace("\\", "")));
-                        String eventCode = info.getAvailabilityURL().getPath().split("/NO/")[1].split(",")[0];
+                    } else if(prop.contains("prices")) {
+                        String eventCode = colonSplit[counter+1].split("\"")[1];
                         info.setEventCode(eventCode);
-                        String subCode = eventCode.split("-")[0];
+                        String subCode = eventCode;
                         if(subCode != null && subCode.length() >=3) {
                             info.setLocation(eventCode.substring(0, 3));
                         }
