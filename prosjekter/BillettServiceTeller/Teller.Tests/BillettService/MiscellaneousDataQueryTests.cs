@@ -14,7 +14,7 @@ namespace Teller.Tests.BillettService
     /// Med andre ord ikke faktiske enhetstester som sådan.
     /// Disse er skrevet fortløpende for å finne ut av koder og denslags. Har sannsynligvis ingen verdi lenger.
     /// </summary>
-    public class MiscellaneousDataQueries
+    public class MiscellaneousDataQueryTests
     {
         [Fact]
         public void ReadSeats_WhenGivedActualBSFile_HaveSomeFun()
@@ -447,6 +447,34 @@ namespace Teller.Tests.BillettService
             var output = builder.ToString();
 
             Console.WriteLine(output);
+        }
+
+        [Fact]
+        public void Bendit()
+        {
+            var sut = new BillettServiceSeteLeser();
+            var file = BillettServiceXmlFile.LoadFile(@"D:\temp\STAut\vif-lsk.xml");
+            var res = sut.ReadSeats(file).ToList();
+
+            var byFelt = res
+                //.Where(s => s.SectionName.StartsWith("BE"))
+                .Select(s => s.SectionName.Substring(0, s.SectionName.IndexOf("-")))
+                .GroupBy(s => s)
+
+                .Select(g => new {Section = g.Key, Count = g.Count()})
+                .ToList();
+
+            var builder = new StringBuilder();
+
+            foreach (var code in byFelt)
+            {
+                builder.AppendLine(code.Section + ": " + code.Count + "stk.");
+
+            }
+            var output = builder.ToString();
+
+            Console.WriteLine(output);
+
         }
     }
 }
