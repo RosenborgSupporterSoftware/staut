@@ -72,7 +72,7 @@ namespace Teller.Core.Classification
                 }
             }
 
-    }
+        }
 
         /// <summary>
         /// Gets or sets the status resulting from a match with this rule
