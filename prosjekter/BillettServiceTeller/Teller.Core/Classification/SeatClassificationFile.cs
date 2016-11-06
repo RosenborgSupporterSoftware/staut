@@ -15,6 +15,11 @@ namespace Teller.Core.Classification
 
         public IEnumerable<SeatClassificationRule> Rules => _rules;
 
+        /// <summary>
+        /// Gets a value indicating whether the SeatClassificationFile has been changed or not
+        /// </summary>
+        public bool Changed => _changed;
+
         private static string ConfigurationFolder
         {
             get

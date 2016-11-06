@@ -43,7 +43,7 @@ namespace Teller.Core.BillettService
                 var xdoc = LoadXDocument(filePath);
                 return new BillettServiceXmlFile(xdoc);
             }
-            catch (Exception e)
+            catch (Exception)
             {
                 return null;
             }

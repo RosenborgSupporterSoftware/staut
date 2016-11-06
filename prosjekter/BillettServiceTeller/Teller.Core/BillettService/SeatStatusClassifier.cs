@@ -50,7 +50,7 @@ namespace Teller.Core.BillettService
             return juba == 9 || juba == 10 || juba == 11;
 
             // Pre-Juba
-
+            /*
             var knownSeasonCodes = new List<string>
             {
                 // Liste hentet ut ved å finne koder 0x400 - 0x600 fra to siste kamper 2015 før de er lagt ut for salg
@@ -104,7 +104,7 @@ namespace Teller.Core.BillettService
             };
 
             return knownSeasonCodes.Contains(code.QualifierBitsHex);
-
+            */
             //if (code.QualifierBitsHex == "413") // hoboj0e sesongkort familierabatt 1
             //    return true;
         }
@@ -134,6 +134,8 @@ namespace Teller.Core.BillettService
 
             // Pre-juba
 
+            /*
+
             if (code.QualifierBitsHex == "414")
                 return true;
             if (code.QualifierBitsHex == "5C2") // Solgt basert på antagelser fra vegardj
@@ -152,6 +154,7 @@ namespace Teller.Core.BillettService
                 return true;
 
             return false;
+            */
         }
     }
 }
