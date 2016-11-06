@@ -33,6 +33,7 @@ namespace PowerSTAut.Commandlets
             }
             catch (PipelineStoppedException e)
             {
+                WriteWarning("Caught exception: " + e.Message);
             }
         }
 
