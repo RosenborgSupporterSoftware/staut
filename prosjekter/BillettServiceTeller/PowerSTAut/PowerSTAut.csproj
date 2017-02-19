@@ -64,6 +64,7 @@
     <Compile Include="Seat.cs" />
     <Compile Include="SeatCodeSummary.cs" />
     <Compile Include="Commandlets\ShowSeatSummary.cs" />
+    <Compile Include="SeatDiff.cs" />
     <Compile Include="SeatSectionSummary.cs" />
     <Compile Include="SeatStatusSummary.cs" />
   </ItemGroup>
