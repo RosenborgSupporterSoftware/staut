@@ -10,7 +10,7 @@ namespace PowerSTAut
     /// </summary>
     public class Seat
     {
-        public string Position { get { return String.Format("{0}:{1}:{2}", SectionName, RowName, SeatName); } }
+        public string Position { get; private set; }
 
         public string SectionName { get; set; }
 
@@ -26,6 +26,7 @@ namespace PowerSTAut
             RowName = seat.RowName;
             SeatName = seat.SeatName;
             EttCode = seat.EttCode;
+            Position = $"{SectionName}:{RowName}:{SeatName}";
 
             Classification = SeatStatusClassifier.Classify(EttCode);
         }
