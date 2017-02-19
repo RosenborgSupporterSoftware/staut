@@ -101,6 +101,15 @@ namespace Teller.Core.Entities
             return new EttCode(ettCode);
         }
 
+        public override bool Equals(object obj)
+        {
+            var other = obj as EttCode;
+            if (other == null)
+                return false;
+
+            return this.Code.Equals(other.Code);
+        }
+
         #endregion
     }
 }
