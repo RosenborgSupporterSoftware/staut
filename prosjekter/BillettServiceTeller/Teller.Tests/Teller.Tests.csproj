@@ -88,7 +88,6 @@
   <ItemGroup>
     <Compile Include="BillettService\BillettServiceSeteLeserTests.cs" />
     <Compile Include="BillettService\EventInfoPropertyReaderTests.cs" />
-    <Compile Include="BillettService\MiscellaneousDataQueryTests.cs" />
     <Compile Include="BillettService\SeatDiffGeneratorTests.cs" />
     <Compile Include="Charts\Helpers\PointReducerTests.cs" />
     <Compile Include="Classification\Operators\GreaterThanOperatorTests.cs" />
