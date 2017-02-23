@@ -16,7 +16,7 @@ namespace Teller.Tests.Filedata
             var sut = new FilesystemEventDataFetcher();
 
             // Act
-            var res = sut.FetchEvents(@"..\..\TestData\archive\2015")
+            var res = sut.FetchEvents(@"..\..\TestData\storage\2015")
                          .ToList();
 
             // Assert
@@ -32,7 +32,7 @@ namespace Teller.Tests.Filedata
         {
             // Arrange
             var sut = new FilesystemEventDataFetcher();
-            var events = sut.FetchEvents(@"..\..\TestData\archive\2015")
+            var events = sut.FetchEvents(@"..\..\TestData\storage\2015")
                             .ToList();
             var vikingur = events.Single(e => e.Opponent == "Vikingur");
 
@@ -41,7 +41,7 @@ namespace Teller.Tests.Filedata
                          .ToList();
 
             // Assert
-            res.Count.Should().Be(399, "there are 399 measurements in this directory");
+            res.Count.Should().Be(3, "there are 3 measurements in this directory");
             res.All(m => m.EventId == 467263).Should().BeTrue("all measurements should return the same event id");
         }
 

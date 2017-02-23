@@ -14,8 +14,8 @@ namespace Teller.Tests.BillettService
         {
             // Arrange
             var sut = new SeatDiffGenerator();
-            var fileA = @"..\..\TestData\archive\til\476973_TromsÃ¸_2016-08-16T10-48.xml";
-            var fileB = @"..\..\TestData\archive\til\476973_TromsÃ¸_2016-08-16T11-28.xml";
+            var fileA = @"..\..\TestData\438533_Viking_2015-09-08T10-57.xml";
+            var fileB = @"..\..\TestData\438533_Viking_2015-09-25T09-47.xml";
             
             // Act
             var res = sut.GenerateDiff(fileA, fileB)
