@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Configuration;
+using System.Diagnostics;
 using System.IO;
 using System.Linq;
 using Teller.Core.Entities;
@@ -46,7 +47,9 @@ namespace Teller.Core.Ingestion
         /// </summary>
         public void ReadAndIngestData()
         {
-            var eventsOnDisk = GetEventsFromDisk();
+            var eventsOnDisk = GetEventsFromDisk().ToList();
+
+            Trace.TraceInformation("Got {0} new event files to process", eventsOnDisk.Count);
 
             foreach (var diskEvent in eventsOnDisk)
             {
@@ -66,14 +69,17 @@ namespace Teller.Core.Ingestion
                 {
                     if (existingMeasurements.Any(e => e.MeasurementTime == diskMeasurement.MeasurementTime))
                     {
-                        Console.WriteLine("Vi vil ikke ha denne: " + diskMeasurement.FullPath);
+                        Trace.TraceInformation("File skipped because of duplicate time: " + diskMeasurement.FullPath);
                         _fileArchiver.MoveToArchive(diskMeasurement);
                         continue;
                     }
                     var measurement = _measurementReader.ReadMeasurement(diskMeasurement);
-                    
-                    if(measurement != null) // Er denne null, så var .xml-fila ikke brukbar for oss - vedlikehold hos BS, f.eks.
+
+                    if (measurement != null) // Er denne null, så var .xml-fila ikke brukbar for oss - vedlikehold hos BS, f.eks.
+                    {
                         dbEvent.Measurements.Add(measurement);
+                        Trace.TraceInformation("Added measurement for time {0} to event {1}", measurement.MeasurementTime, dbEvent.EventCode);
+                    }
 
                     _fileArchiver.MoveToArchive(diskMeasurement);
                 }
