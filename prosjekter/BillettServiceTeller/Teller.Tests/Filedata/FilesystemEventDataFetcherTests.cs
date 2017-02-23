@@ -16,7 +16,7 @@ namespace Teller.Tests.Filedata
             var sut = new FilesystemEventDataFetcher();
 
             // Act
-            var res = sut.FetchEvents(@"..\..\TestData\archive")
+            var res = sut.FetchEvents(@"..\..\TestData\archive\2015")
                          .ToList();
 
             // Assert
@@ -32,29 +32,17 @@ namespace Teller.Tests.Filedata
         {
             // Arrange
             var sut = new FilesystemEventDataFetcher();
-            var events = sut.FetchEvents(@"..\..\TestData\archive")
+            var events = sut.FetchEvents(@"..\..\TestData\archive\2015")
                             .ToList();
-            var odd = events.Single(e => e.Opponent == "Odd");
+            var vikingur = events.Single(e => e.Opponent == "Vikingur");
 
             // Act
-            var res = sut.GetMeasurements(odd)
+            var res = sut.GetMeasurements(vikingur)
                          .ToList();
 
             // Assert
-            res.Count.Should().Be(3, "there are three measurements in this directory");
-            res.All(m => m.EventId == 438523).Should().BeTrue("all measurements should return the same event id");
-            res.All(m => m.MeasurementTime.Year == 2015 && m.MeasurementTime.Month == 6 && m.MeasurementTime.Day == 30)
-               .Should()
-               .BeTrue("all measurements should have the same date");
-            res.Count(m => m.MeasurementTime.Hour == 12 && m.MeasurementTime.Minute == 12)
-               .Should()
-               .Be(1, "only one of the measurements should match");
-            res.Count(m => m.MeasurementTime.Hour == 12 && m.MeasurementTime.Minute == 42)
-               .Should()
-               .Be(1, "only one of the measurements should match");
-            res.Count(m => m.MeasurementTime.Hour == 13 && m.MeasurementTime.Minute == 12)
-               .Should()
-               .Be(1, "only one of the measurements should match");
+            res.Count.Should().Be(399, "there are 399 measurements in this directory");
+            res.All(m => m.EventId == 467263).Should().BeTrue("all measurements should return the same event id");
         }
 
         #endregion
