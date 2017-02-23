@@ -1,4 +1,6 @@
 ﻿using System;
+using System.Diagnostics;
+using System.IO;
 using System.Linq;
 using Teller.Charts;
 using Teller.Core.Filedata;
@@ -13,6 +15,8 @@ namespace Ingest
         [STAThread]
         static void Main(string[] args)
         {
+            SetupTraceListeners();
+
             // Ikke akkurat dependency injection
             using (var context = new TellerContext())
             {
@@ -41,6 +45,22 @@ namespace Ingest
                     test.Render(bsEvent);
                 }
             }
+
+            Trace.Flush();
+            Trace.Close();
+        }
+
+        private static void SetupTraceListeners()
+        {
+            var today = DateTime.Today;
+            var path = $"Trace\\${today.Year}\\${today.Month}\\${today.Day}";
+            if (!Directory.Exists(path))
+                Directory.CreateDirectory(path);
+
+            var fullPath = Path.Combine(Environment.CurrentDirectory, path, "IngestTrace.txt");
+
+            Trace.Listeners.Add(new ConsoleTraceListener());
+            Trace.Listeners.Add(new TextWriterTraceListener(fullPath));
         }
     }
 }
