@@ -45,11 +45,23 @@ namespace Teller.Core.Ingestion
         /// <summary>
         /// Hent nye datafiler fra disk og legg dem i databasen. Etterhvert: Arkivér dem også.
         /// </summary>
-        public void ReadAndIngestData()
+        /// <returns>A sequence of events that had data added to them</returns>
+        public IEnumerable<BillettServiceEvent> ReadAndIngestData()
         {
-            var eventsOnDisk = GetEventsFromDisk().ToList();
+            List<BillettServiceEvent> eventsOnDisk;
 
-            Trace.TraceInformation("Got {0} new event files to process", eventsOnDisk.Count);
+            try
+            {
+                eventsOnDisk = GetEventsFromDisk().ToList();
+            }
+            catch (Exception e)
+            {
+                Trace.TraceError("Fetching events failed, exiting: {0}", e.Message);
+                return Enumerable.Empty<BillettServiceEvent>();
+            }
+
+            var updatedEvents = new List<BillettServiceEvent>();
+
 
             foreach (var diskEvent in eventsOnDisk)
             {
@@ -62,6 +74,7 @@ namespace Teller.Core.Ingestion
                 }
 
                 var diskMeasurements = _eventDataFetcher.GetMeasurements(diskEvent).ToList();
+                Trace.TraceInformation("Got {0} new measurements to process for event {1}", eventsOnDisk.Count, diskEvent.EventNumber);
                 var existingMeasurements = _measurementRepository.GetForEventAndDateTimes(dbEvent,
                     diskMeasurements.Select(dm => dm.MeasurementTime)).ToList();
 
@@ -79,6 +92,8 @@ namespace Teller.Core.Ingestion
                     {
                         dbEvent.Measurements.Add(measurement);
                         Trace.TraceInformation("Added measurement for time {0} to event {1}", measurement.MeasurementTime, dbEvent.EventCode);
+                        if(!updatedEvents.Contains(dbEvent))
+                            updatedEvents.Add(dbEvent);
                     }
 
                     _fileArchiver.MoveToArchive(diskMeasurement);
@@ -89,6 +104,8 @@ namespace Teller.Core.Ingestion
             _eventRepository.SaveChanges();
 
             _fileArchiver.PerformCleanup();
+
+            return updatedEvents;
         }
 
         #endregion
@@ -98,8 +115,11 @@ namespace Teller.Core.Ingestion
         private IEnumerable<BillettServiceEvent> GetEventsFromDisk()
         {
             var path = StautConfiguration.Current.CollectorDirectory;
-            if(!Directory.Exists(path))
+            if (!Directory.Exists(path))
+            {
+                Trace.TraceError("collectorDirectory is not set to a valid directory: {0}", path);
                 throw new ConfigurationErrorsException("collectorDirectory er ikke satt til et gyldig directory");
+            }
 
             return _eventDataFetcher.FetchEvents(path);
         }

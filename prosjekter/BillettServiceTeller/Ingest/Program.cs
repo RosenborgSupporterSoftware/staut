@@ -1,8 +1,10 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Diagnostics;
 using System.IO;
 using System.Linq;
 using Teller.Charts;
+using Teller.Core.Entities;
 using Teller.Core.Filedata;
 using Teller.Core.Ingestion;
 using Teller.Persistance;
@@ -17,6 +19,8 @@ namespace Ingest
         {
             SetupTraceListeners();
 
+            List<BillettServiceEvent> updatedEvents;
+
             // Ikke akkurat dependency injection
             using (var context = new TellerContext())
             {
@@ -28,7 +32,14 @@ namespace Ingest
 
                 var ingestor = new MeasurementIngestor(eventRepo, measurementRepo, eventFetcher, measurementReader, fileArchiver);
 
-                ingestor.ReadAndIngestData();
+                updatedEvents = ingestor.ReadAndIngestData().ToList();
+            }
+
+            if (!updatedEvents.Any())
+            {
+                Trace.Flush();
+                Trace.Close();
+                return;
             }
 
             using (var context = new TellerContext())
@@ -53,7 +64,7 @@ namespace Ingest
         private static void SetupTraceListeners()
         {
             var today = DateTime.Today;
-            var path = $"Trace\\${today.Year}\\${today.Month}\\${today.Day}";
+            var path = $"Trace\\{today.Year}\\{today.Month}\\{today.Day}";
             if (!Directory.Exists(path))
                 Directory.CreateDirectory(path);
 
