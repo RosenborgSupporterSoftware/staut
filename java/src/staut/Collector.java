@@ -113,6 +113,7 @@ public class Collector {
                 for(String prop : quoteSplit) {
                     if(prop.equals("availability")) {
                         info.setAvailabilityURL(new URL(BASE_BILLETTSERVICE_URL + quoteSplit[counter+4].replace("\\", "")));
+                        foundAvailabilityData = true;
                     }
                     if(prop.equals("geometry")) {
                         info.setGeometryURL(new URL(BASE_BILLETTSERVICE_URL + quoteSplit[counter+4].replace("\\", "")));
@@ -155,7 +156,6 @@ public class Collector {
                 int counter = 0;
                 for(String prop : quoteSplit) {
                     if(prop.equals("eventid")) {
-                        System.out.println("COUNTER: " + counter);
                         info.setEventCode(quoteSplit[counter+2]);
                         String subCode = info.getEventCode();
                         if(subCode != null && subCode.length() >=3) {
