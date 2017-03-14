@@ -8,9 +8,7 @@ import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.io.OutputStream;
 import java.net.HttpURLConnection;
-import java.net.MalformedURLException;
 import java.net.URL;
-import java.net.URLConnection;
 import java.nio.charset.Charset;
 import java.nio.file.Files;
 import java.text.SimpleDateFormat;
@@ -108,24 +106,60 @@ public class Collector {
         BufferedReader in = new BufferedReader(input);
         String inputLine;
         boolean foundAvailabilityData = false;
-        while ((inputLine = in.readLine()) != null && !foundAvailabilityData) {
-            if(inputLine.contains("availabilityURL")) {
-                String[] colonSplit = inputLine.split(":");
-                int counter=0;
-                for(String prop : colonSplit) {
+        while ((inputLine = in.readLine()) != null) {
+            if(inputLine.contains("ism_config")) {
+                String[] quoteSplit = inputLine.split("ism_config")[1].split("\"");
+                int counter = 0;
+                for(String prop : quoteSplit) {
+                    if(prop.equals("availability")) {
+                        info.setAvailabilityURL(new URL(BASE_BILLETTSERVICE_URL + quoteSplit[counter+4].replace("\\", "")));
+                    }
+                    if(prop.equals("geometry")) {
+                        info.setGeometryURL(new URL(BASE_BILLETTSERVICE_URL + quoteSplit[counter+4].replace("\\", "")));
+                    }
                     counter++;
-                    if(prop.contains("eventName")) {
-                        String name = replaceUnicodeEscapes(colonSplit[counter].split("\"")[1]);
-                        info.setEventName(name);
-                    } else if(prop.contains("availabilityURL")) {
-                        foundAvailabilityData = true;
-                        info.setAvailabilityURL(new URL(BASE_BILLETTSERVICE_URL + colonSplit[counter].split("\"")[1].replace("\\", "")));
-                    } else if(prop.contains("prices")) {
-                        String eventCode = colonSplit[counter+1].split("\"")[1];
-                        info.setEventCode(eventCode);
-                        String subCode = eventCode;
+                }
+            }            
+            if(inputLine.contains("event_info")) {
+                String[] quoteSplit = inputLine.split("\"");
+                int counter = 0;
+                String year = null;
+                String month = null;
+                String day = null;
+                String time = null;
+                for(String prop : quoteSplit) {
+                    if(prop.equals("event_info")) {
+                        info.setEventName(quoteSplit[counter+4]);
+                    } 
+                    if(prop.equals("year")) {
+                        year = quoteSplit[counter+2];
+                    }
+                    if(prop.equals("month")) {
+                        month = quoteSplit[counter+2];
+                    }
+                    if(prop.equals("day")) {
+                        day = quoteSplit[counter+2];
+                    }
+                    if(prop.equals("time")) {
+                        info.setEventTime(quoteSplit[counter+2]);
+                        break; // Avoid reading later times in same string
+                    }     
+                    counter++;
+                }
+                if(year != null & month != null & day != null) {
+                    info.setEventDate(day + "." + month + "." + year);
+                }
+            }           
+            if(inputLine.contains("id=\"data-ads")) {
+                String[] quoteSplit = inputLine.split("\"");
+                int counter = 0;
+                for(String prop : quoteSplit) {
+                    if(prop.equals("eventid")) {
+                        System.out.println("COUNTER: " + counter);
+                        info.setEventCode(quoteSplit[counter+2]);
+                        String subCode = info.getEventCode();
                         if(subCode != null && subCode.length() >=3) {
-                            info.setLocation(eventCode.substring(0, 3));
+                            info.setLocation(subCode.substring(0, 3));
                         }
                         if(subCode != null && subCode.length() >=5) {
                             String part2 = subCode.substring(3, 5);
@@ -134,10 +168,10 @@ public class Collector {
                                 // This is Norwegian cup.
                                 info.setCompetition(EventInfo.CUP_COMPETITION);
                                 info.setRound(0); // unknown
-                            } else if(part2.matches("\\d\\d")) { // Two digits
+                            } else if(part3.matches("\\d\\d")) { // Two digits
                                 // This is a league game.
                                 info.setCompetition(EventInfo.LEAGUE_COMPETITION);
-                                info.setRound(Integer.parseInt(part2));
+                                info.setRound(Integer.parseInt(part3));
                             } else if(part2.equals(EventInfo.EC_COMPETITION)){
                                 // This is European cup.
                                 info.setCompetition(EventInfo.EC_COMPETITION);
@@ -155,16 +189,69 @@ public class Collector {
                                 info.setRound(0);
                             }
                         }
-                    } else if(prop.contains("mapsellURL")) {
-                        info.setGeometryURL(new URL(BASE_BILLETTSERVICE_URL + colonSplit[counter].split("\"")[1].replace("\\", "")));
-                    } else if (prop.contains("eventDateTime")) {
-                        String[] starttime = colonSplit[counter].split("\"")[1].split(",")[1].trim().split(" ");
-                        info.setEventDate(starttime[0].trim());
-                        info.setEventTime(starttime[starttime.length-1].trim() + ":" + colonSplit[counter+1].split("\"")[0]);
+                        break;
                     }
+                    counter++;
                 }
             }
         }
+//        while ((inputLine = in.readLine()) != null && !foundAvailabilityData) {
+//            if(inputLine.contains("availabilityURL")) {
+//                String[] colonSplit = inputLine.split(":");
+//                int counter=0;
+//                for(String prop : colonSplit) {
+//                    counter++;
+//                    if(prop.contains("eventName")) {
+//                        String name = replaceUnicodeEscapes(colonSplit[counter].split("\"")[1]);
+//                        info.setEventName(name);
+//                    } else if(prop.contains("availabilityURL")) {
+//                        foundAvailabilityData = true;
+//                        info.setAvailabilityURL(new URL(BASE_BILLETTSERVICE_URL + colonSplit[counter].split("\"")[1].replace("\\", "")));
+//                    } else if(prop.contains("prices")) {
+//                        String eventCode = colonSplit[counter+1].split("\"")[1];
+//                        info.setEventCode(eventCode);
+//                        String subCode = eventCode;
+//                        if(subCode != null && subCode.length() >=3) {
+//                            info.setLocation(eventCode.substring(0, 3));
+//                        }
+//                        if(subCode != null && subCode.length() >=5) {
+//                            String part2 = subCode.substring(3, 5);
+//                            String part3 =subCode.substring(5);
+//                            if(subCode.length() >= 8 && subCode.substring(7,8).equals("N")) {
+//                                // This is Norwegian cup.
+//                                info.setCompetition(EventInfo.CUP_COMPETITION);
+//                                info.setRound(0); // unknown
+//                            } else if(part2.matches("\\d\\d")) { // Two digits
+//                                // This is a league game.
+//                                info.setCompetition(EventInfo.LEAGUE_COMPETITION);
+//                                info.setRound(Integer.parseInt(part2));
+//                            } else if(part2.equals(EventInfo.EC_COMPETITION)){
+//                                // This is European cup.
+//                                info.setCompetition(EventInfo.EC_COMPETITION);
+//                                info.setRound(Integer.parseInt(part3));    
+//                            } else if(part2.equals(EventInfo.EL_COMPETITION)){
+//                                // This is Europa League
+//                                info.setCompetition(EventInfo.EL_COMPETITION);
+//                                info.setRound(Integer.parseInt(part3));
+//                            } else if(part2.equals(EventInfo.CL_COMPETITION)){
+//                                // This is Champions League
+//                                info.setCompetition(EventInfo.CL_COMPETITION);
+//                                info.setRound(Integer.parseInt(part3));
+//                            } else {
+//                                info.setCompetition("unknown");
+//                                info.setRound(0);
+//                            }
+//                        }
+//                    } else if(prop.contains("mapsellURL")) {
+//                        info.setGeometryURL(new URL(BASE_BILLETTSERVICE_URL + colonSplit[counter].split("\"")[1].replace("\\", "")));
+//                    } else if (prop.contains("eventDateTime")) {
+//                        String[] starttime = colonSplit[counter].split("\"")[1].split(",")[1].trim().split(" ");
+//                        info.setEventDate(starttime[0].trim());
+//                        info.setEventTime(starttime[starttime.length-1].trim() + ":" + colonSplit[counter+1].split("\"")[0]);
+//                    }
+//                }
+//            }
+//        }
         if(!foundAvailabilityData) {
             STAut.error("Could not find relevant event details for event. " + info.detailedString());
         }
