@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using Teller.Core.Entities;
 
 namespace Teller.Core.BillettService
@@ -12,7 +13,10 @@ namespace Teller.Core.BillettService
 
             if(code.BaseTypeHex == "1E")
                 return SeatStatus.HeldByTicketMasterApplication;
-            
+
+            if (IsKnownBorteSvinCode(code))
+                return SeatStatus.Bortesvin;
+
             if(IsKnownSeasonTicketCode(code))
                 return SeatStatus.SeasonTicket;
 
@@ -41,6 +45,12 @@ namespace Teller.Core.BillettService
 
         public static bool IsKnownSeasonTicketCode(EttCode code)
         {
+            var juba = code.JubaFlags;
+
+            return juba == 9 || juba == 10 || juba == 11;
+
+            // Pre-Juba
+            /*
             var knownSeasonCodes = new List<string>
             {
                 // Liste hentet ut ved å finne koder 0x400 - 0x600 fra to siste kamper 2015 før de er lagt ut for salg
@@ -94,13 +104,38 @@ namespace Teller.Core.BillettService
             };
 
             return knownSeasonCodes.Contains(code.QualifierBitsHex);
-
+            */
             //if (code.QualifierBitsHex == "413") // hoboj0e sesongkort familierabatt 1
             //    return true;
         }
 
+        public static bool IsKnownBorteSvinCode(EttCode code)
+        {
+            // 4060001,4230001,4240001,46a0001
+            if (code.QualifierBitsHex == "406")
+                return true;
+            if (code.QualifierBitsHex == "423")
+                return true;
+            if (code.QualifierBitsHex == "424")
+                return true;
+            if (code.QualifierBitsHex == "46A")
+                return true;
+            if (code.QualifierBitsHex == "465")
+                return true;
+
+            return false;
+        }
+
         public static bool IsKnownSoldCode(EttCode code)
         {
+            var juba = code.JubaFlags;
+
+            return juba == 12 || juba == 8;
+
+            // Pre-juba
+
+            /*
+
             if (code.QualifierBitsHex == "414")
                 return true;
             if (code.QualifierBitsHex == "5C2") // Solgt basert på antagelser fra vegardj
@@ -119,6 +154,7 @@ namespace Teller.Core.BillettService
                 return true;
 
             return false;
+            */
         }
     }
 }

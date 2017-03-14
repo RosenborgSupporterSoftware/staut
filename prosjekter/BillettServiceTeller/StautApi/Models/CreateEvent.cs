@@ -41,6 +41,28 @@ namespace StautApi.Models
         public List<MeasurementDto> Measurements { get; set; }
     }
 
+    /// <summary>
+    /// runej@20032016: Lager en egen for eksperimentering mot Ember.
+    /// </summary>
+    public class MatchDto
+    {
+        public int Id { get; set; }
+        public int EventNumber { get; set; }
+        public string EventCode { get; set; }
+        public string DisplayName { get; set; }
+        public string Tournament { get; set; }
+        public int Round { get; set; }
+        public string Season { get; set; }
+        public string Location { get; set; }
+        public string Opponent { get; set; }
+        public DateTime Start { get; set; }
+        public string EventUrl { get; set; }
+        public string AvailibilityUrl { get; set; }
+        public string GeometryUrl { get; set; }
+        public int FinalEstimatedSeatCount { get; set; }
+        public int OfficialSeatCount { get; set; }
+    }
+
     public class MeasurementDto
     {
         public int Id { get; set; }

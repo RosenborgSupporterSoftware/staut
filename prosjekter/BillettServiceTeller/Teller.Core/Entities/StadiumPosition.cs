@@ -1,4 +1,5 @@
 ﻿using System;
+using Teller.Core.Extensions;
 
 namespace Teller.Core.Entities
 {
@@ -29,7 +30,7 @@ namespace Teller.Core.Entities
             {
                 if (split[0] != "*" && split[0] != "")
                 {
-                    if (!SectionName.Contains(split[0]))
+                    if (!SectionName.Contains(split[0], StringComparison.OrdinalIgnoreCase))
                         return false;
                 }
             }

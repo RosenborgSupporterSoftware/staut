@@ -15,6 +15,11 @@ namespace Teller.Persistance
         /// </summary>
         public DbSet<Measurement> Measurements { get; set; }
 
+        /// <summary>
+        /// Chat-meldinger
+        /// </summary>
+        public DbSet<ChatMessage> ChatMessages { get; set; }
+
         public TellerContext()
             : base("STAut")
         {
@@ -22,12 +27,16 @@ namespace Teller.Persistance
 
         protected override void OnModelCreating(DbModelBuilder modelBuilder)
         {
+            Database.SetInitializer<TellerContext>(new NullDatabaseInitializer<TellerContext>());
+
             base.OnModelCreating(modelBuilder);
 
             modelBuilder.Entity<BillettServiceEvent>()
                         .ToTable("events");
             modelBuilder.Entity<Measurement>()
                         .ToTable("measurements");
+            modelBuilder.Entity<ChatMessage>()
+                        .ToTable("chatmessages");
         }
     }
 }

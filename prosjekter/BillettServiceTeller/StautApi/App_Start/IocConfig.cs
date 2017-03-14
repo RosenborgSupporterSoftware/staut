@@ -5,6 +5,7 @@ using System.Reflection;
 using System.Web.Http;
 using Autofac;
 using Autofac.Integration.WebApi;
+using AutoMapper;
 using Teller.Core.Entities;
 using Teller.Core.Repository;
 using Teller.Persistance;
@@ -17,6 +18,8 @@ namespace StautApi
     {
         public static void Bootstrap(HttpConfiguration config)
         {
+            var mapperConfig = MapperConfig.Configure();
+
             var builder = new ContainerBuilder();
             builder.RegisterApiControllers(Assembly.GetExecutingAssembly());
 
@@ -26,7 +29,11 @@ namespace StautApi
             // Real implementation
             builder.RegisterType<EventRepository>().As<IEventRepository>().InstancePerLifetimeScope();
             builder.RegisterType<MeasurementRepository>().As<IMeasurementRepository>().InstancePerLifetimeScope();
+            builder.RegisterType<ChatMessageRepository>().As<IChatMessageRepository>().InstancePerLifetimeScope();
             builder.RegisterType<TellerContext>().InstancePerLifetimeScope();
+
+            builder.RegisterInstance(mapperConfig).As<MapperConfiguration>();
+
             var container = builder.Build();
 
             config.DependencyResolver = new AutofacWebApiDependencyResolver(container);

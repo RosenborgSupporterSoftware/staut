@@ -1,5 +1,6 @@
 ﻿using System.Web;
 using System.Web.Http;
+using AutoMapper;
 
 namespace StautApi
 {
@@ -9,7 +10,6 @@ namespace StautApi
         {
             GlobalConfiguration.Configure(WebApiConfig.Register);
             GlobalConfiguration.Configure(IocConfig.Bootstrap);
-            MapperConfig.Configure();
         }
     }
 }

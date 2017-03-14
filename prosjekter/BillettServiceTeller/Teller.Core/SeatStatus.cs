@@ -23,6 +23,11 @@
         Sold = 2,
 
         /// <summary>
+        /// Et bortesvin har kjøpt setet for gjeldende kamp
+        /// </summary>
+        Bortesvin = 3,
+
+        /// <summary>
         /// Setet er holdt av til ett eller annet formål
         /// </summary>
         Reserved = 5,
@@ -32,7 +37,7 @@
         /// </summary>
         Unavailable = 10,
 
-            /// <summary>
+        /// <summary>
         /// Ukjent status - vi vet virkelig ikke hva den betyr
         /// </summary>
         Unknown = 20,

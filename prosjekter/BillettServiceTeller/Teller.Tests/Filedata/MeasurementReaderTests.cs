@@ -15,7 +15,7 @@ namespace Teller.Tests.Filedata
         public void ReadMeasurement_WhenGivenGoodFile_ReturnsExpectedData()
         {
             // Arrange
-            const string inputFile = @"..\..\TestData\archive\2015_LEAGUE_8_Odd_438523\438523_Odd_2015-06-30T12-12.xml";
+            const string inputFile = @"..\..\TestData\438533_Viking_2015-09-08T10-57.xml";
             var measurementFile = new MeasurementFile(inputFile);
             var sut = new MeasurementReader();
 
@@ -23,13 +23,13 @@ namespace Teller.Tests.Filedata
             var res = sut.ReadMeasurement(measurementFile);
 
             // Assert
-            res.AmountSold.Should().Be(1352);
-            res.AmountSeasonTicket.Should().Be(8098);
-            res.AmountAvailable.Should().Be(9201);
-            res.AmountReserved.Should().Be(2933);
+            res.AmountSold.Should().Be(375);
+            res.AmountSeasonTicket.Should().Be(8161);
+            res.AmountAvailable.Should().Be(9610);
+            res.AmountReserved.Should().Be(3280);
             res.AmountUnavailable.Should().Be(0);
             res.AmountTicketMaster.Should().Be(0);
-            res.AmountUnknown.Should().Be(61);
+            res.AmountUnknown.Should().Be(216);
         }
 
 
