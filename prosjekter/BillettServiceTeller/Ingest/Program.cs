@@ -17,6 +17,9 @@ namespace Ingest
         [STAThread]
         static void Main(string[] args)
         {
+            var sw = new Stopwatch();
+            sw.Start();
+
             SetupTraceListeners();
 
             List<BillettServiceEvent> updatedEvents;
@@ -42,11 +45,14 @@ namespace Ingest
                 return;
             }
 
+            Trace.TraceInformation("{0} events updated: {1}", updatedEvents.Count, String.Join(", ", updatedEvents.Select(e => e.EventNumber)));
+
             using (var context = new TellerContext())
             {
                 var eventRepo = new EventRepository(context);
 
                 var allEvents = eventRepo.GetAll()
+                                         .Where(e => updatedEvents.Any(ue => ue.EventNumber == e.EventNumber))
                                          .ToList();
 
                 var test = new RenderTest();
@@ -56,6 +62,9 @@ namespace Ingest
                     test.Render(bsEvent);
                 }
             }
+
+            sw.Stop();
+            Trace.TraceInformation("Ingest process complete, took {0}ms", sw.ElapsedMilliseconds);
 
             Trace.Flush();
             Trace.Close();
