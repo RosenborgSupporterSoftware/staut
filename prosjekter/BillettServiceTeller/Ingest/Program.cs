@@ -6,6 +6,7 @@ using System.Linq;
 using Teller.Charts;
 using Teller.Core.Entities;
 using Teller.Core.Filedata;
+using Teller.Core.Infrastructure;
 using Teller.Core.Ingestion;
 using Teller.Persistance;
 using Teller.Persistance.Implementations;
@@ -38,13 +39,6 @@ namespace Ingest
                 updatedEvents = ingestor.ReadAndIngestData().ToList();
             }
 
-            if (!updatedEvents.Any())
-            {
-                Trace.Flush();
-                Trace.Close();
-                return;
-            }
-
             Trace.TraceInformation("{0} events updated: {1}", updatedEvents.Count, String.Join(", ", updatedEvents.Select(e => e.EventNumber)));
 
             using (var context = new TellerContext())
@@ -52,12 +46,26 @@ namespace Ingest
                 var eventRepo = new EventRepository(context);
 
                 var allEvents = eventRepo.GetAll()
-                                         .Where(e => updatedEvents.Any(ue => ue.EventNumber == e.EventNumber))
+                                         //.Where(e => updatedEvents.Any(ue => ue.EventNumber == e.EventNumber))
                                          .ToList();
+
+                var missingFileEvents =
+                    allEvents.Where(
+                                 ev =>
+                                     !File.Exists(Path.Combine(StautConfiguration.Current.StaticImageDirectory,
+                                         ev.EventNumber + ".png")))
+                             .ToList();
+
+                var eventsToRender =
+                    missingFileEvents.Concat(
+                        allEvents.Where(
+                            ae =>
+                                !missingFileEvents.Contains(ae) &&
+                                updatedEvents.Any(ue => ue.EventNumber == ae.EventNumber))).ToList();
 
                 var test = new RenderTest();
 
-                foreach (var bsEvent in allEvents)
+                foreach (var bsEvent in eventsToRender)
                 {
                     test.Render(bsEvent);
                 }
