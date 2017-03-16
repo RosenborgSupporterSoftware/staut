@@ -1,4 +1,5 @@
-﻿using System.IO;
+﻿using System.Diagnostics;
+using System.IO;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Media;
@@ -20,7 +21,15 @@ namespace Teller.Charts
 
             var path = Path.Combine(StautConfiguration.Current.StaticImageDirectory, bsEvent.EventNumber + ".png");
 
+            Trace.TraceInformation("Rendering {0}x{1} chart for event {2} to {3}", width, height, bsEvent.EventNumber, path);
+
+            var sw = new Stopwatch();
+            sw.Start();
+
             RenderAndSave(ctrl, path, width, height);
+
+            sw.Stop();
+            Trace.TraceInformation("Chart render took {0}ms", sw.ElapsedMilliseconds);
         }
 
         void RenderAndSave(UIElement target, string filename, int width, int height)
