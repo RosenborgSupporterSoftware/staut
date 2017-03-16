@@ -74,7 +74,15 @@ namespace Teller.Core.Ingestion
                 }
 
                 var diskMeasurements = _eventDataFetcher.GetMeasurements(diskEvent).ToList();
-                Trace.TraceInformation("Got {0} new measurements to process for event {1}", eventsOnDisk.Count, diskEvent.EventNumber);
+                if (!diskMeasurements.Any())
+                    continue;
+                
+                Trace.TraceInformation("Got {0} new measurement{2} to process for event {1}: ", diskMeasurements.Count, diskEvent.EventNumber, diskMeasurements.Count == 1 ? "" : "s");
+                foreach (var measurement in diskMeasurements)
+                {
+                    Trace.TraceInformation(measurement.FullPath);
+                }
+
                 var existingMeasurements = _measurementRepository.GetForEventAndDateTimes(dbEvent,
                     diskMeasurements.Select(dm => dm.MeasurementTime)).ToList();
 
@@ -91,9 +99,12 @@ namespace Teller.Core.Ingestion
                     if (measurement != null) // Er denne null, så var .xml-fila ikke brukbar for oss - vedlikehold hos BS, f.eks.
                     {
                         dbEvent.Measurements.Add(measurement);
-                        Trace.TraceInformation("Added measurement for time {0} to event {1}", measurement.MeasurementTime, dbEvent.EventCode);
-                        if(!updatedEvents.Contains(dbEvent))
+                        Trace.TraceInformation("Added measurement for time {0} to event {1}", measurement.MeasurementTime, dbEvent.EventNumber);
+                        if (!updatedEvents.Contains(dbEvent))
+                        {
                             updatedEvents.Add(dbEvent);
+                            Trace.TraceInformation("Adding {0} to list of updated events", dbEvent.EventNumber);
+                        }
                     }
 
                     _fileArchiver.MoveToArchive(diskMeasurement);
