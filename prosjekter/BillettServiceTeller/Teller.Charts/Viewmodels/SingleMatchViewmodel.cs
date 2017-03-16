@@ -97,17 +97,12 @@ namespace Teller.Charts.Viewmodels
         public SingleMatchViewmodel(BillettServiceEvent bsEvent)
         {
             Opponent = bsEvent.Opponent;
-            if (bsEvent.Tournament == "LEAGUE")
-                Tournament = "Tippeligaen " + bsEvent.Start.Year;
-            else if (bsEvent.Tournament == "NM")
-                Tournament = "Norgesmesterskapet " + bsEvent.Start.Year;
-            else if (bsEvent.Tournament == "EC" || bsEvent.Tournament == "EL")
-                Tournament = "Europacup";
+            Tournament = CreateTournamentName(bsEvent);
 
             Location = bsEvent.Location == "TLD" ? "Lerkendal Stadion" : "";
             _matchStart = bsEvent.Start;
             
-            var logoPath = StautConfiguration.Current.LogoDirectory;
+            var logoPath = StautConfiguration.Current.LogoDirectory ?? Environment.CurrentDirectory;
             EnemyLogoPath = Path.Combine(logoPath, Opponent.Replace("/", "_") + ".png"); // Helvetes Bodø/Glimt.
             if (!File.Exists(EnemyLogoPath))
                 EnemyLogoPath = Path.Combine(logoPath, "NoLogo.png");
@@ -160,6 +155,24 @@ namespace Teller.Charts.Viewmodels
                 return string.Empty;
 
             return char.ToUpper(s[0]) + s.Substring(1);
+        }
+
+        public string CreateTournamentName(BillettServiceEvent bsEvent)
+        {
+            var year = bsEvent.Start.Year;
+            switch (bsEvent.Tournament)
+            {
+                case "LEAGUE":
+                    if (year >= 2017)
+                        return "Elite Serien " + year; // Haw haw haw
+                    return "Tippeligaen " + year;
+                case "NM":
+                    return "Norgesmesterskapet " + year;
+                case "EC":
+                    return "Europacup";
+                default:
+                    return String.Empty;
+            }
         }
     }
 }
