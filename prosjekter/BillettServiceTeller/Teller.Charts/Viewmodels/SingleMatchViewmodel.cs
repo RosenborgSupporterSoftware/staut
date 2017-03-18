@@ -99,7 +99,7 @@ namespace Teller.Charts.Viewmodels
             Opponent = bsEvent.Opponent;
             Tournament = CreateTournamentName(bsEvent);
 
-            Location = bsEvent.Location == "TLD" ? "Lerkendal Stadion" : "";
+            Location = bsEvent.Location == "TLD" ? "Lerkendal stadion" : "";
             _matchStart = bsEvent.Start;
             
             var logoPath = StautConfiguration.Current.LogoDirectory ?? Environment.CurrentDirectory;
