@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
 using ScrapySharp.Extensions;
 using ScrapySharp.Network;
 
@@ -7,7 +8,7 @@ namespace Teller.Scraper
 {
     public class EventScraper
     {
-        public IEnumerable<WebEventDetails> Scrape()
+        public IEnumerable<ListedWebEvent> Scrape()
         {
             var browser = new ScrapingBrowser();
 
@@ -17,10 +18,8 @@ namespace Teller.Scraper
 
             foreach (var htmlNode in items)
             {
-                Console.WriteLine(htmlNode.InnerText);
+                yield return ListedWebEvent.ParseListedWebEvent(htmlNode);
             }
-
-            return null;
         }
 
     }

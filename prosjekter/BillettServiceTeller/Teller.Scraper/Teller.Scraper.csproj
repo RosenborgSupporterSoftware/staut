@@ -58,7 +58,7 @@
   <ItemGroup>
     <Compile Include="EventScraper.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="WebEventDetails.cs" />
+    <Compile Include="ListedWebEvent.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />

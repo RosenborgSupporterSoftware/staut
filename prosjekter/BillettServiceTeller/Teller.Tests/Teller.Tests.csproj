@@ -103,6 +103,7 @@
     <Compile Include="Filedata\MeasurementReaderTests.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Scraper\EventScraperTestsTemp.cs" />
+    <Compile Include="Scraper\ListedWebEventTests.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />
