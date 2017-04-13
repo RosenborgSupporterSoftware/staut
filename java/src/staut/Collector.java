@@ -130,7 +130,7 @@ public class Collector {
                 String time = null;
                 for(String prop : quoteSplit) {
                     if(prop.equals("event_info")) {
-                        info.setEventName(quoteSplit[counter+4]);
+                        info.setEventName(replaceUnicodeEscapes(quoteSplit[counter+4]));
                     } 
                     if(prop.equals("year")) {
                         year = quoteSplit[counter+2];
