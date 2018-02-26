@@ -151,11 +151,11 @@ public class Collector {
                     info.setEventDate(day + "." + month + "." + year);
                 }
             }           
-            if(inputLine.contains("id=\"data-ads")) {
+            if(inputLine.contains("data-tags")) {
                 String[] quoteSplit = inputLine.split("\"");
                 int counter = 0;
                 for(String prop : quoteSplit) {
-                    if(prop.equals("eventid")) {
+                    if(prop.equals("code") && quoteSplit[counter+2].length() > 3) { // "code":"TLD0118"
                         info.setEventCode(quoteSplit[counter+2]);
                         String subCode = info.getEventCode();
                         if(subCode != null && subCode.length() >=3) {
@@ -171,7 +171,7 @@ public class Collector {
                             } else if(part3.matches("\\d\\d")) { // Two digits
                                 // This is a league game.
                                 info.setCompetition(EventInfo.LEAGUE_COMPETITION);
-                                info.setRound(Integer.parseInt(part3));
+                                info.setRound(Integer.parseInt(part2));
                             } else if(part2.equals(EventInfo.EC_COMPETITION)){
                                 // This is European cup.
                                 info.setCompetition(EventInfo.EC_COMPETITION);
