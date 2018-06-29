@@ -163,12 +163,12 @@ public class Collector {
                         }
                         if(subCode != null && subCode.length() >=5) {
                             String part2 = subCode.substring(3, 5);
-                            String part3 =subCode.substring(5);
+                            String part3 = subCode.substring(5);
                             if(subCode.length() >= 8 && subCode.substring(7,8).equals("N")) {
                                 // This is Norwegian cup.
                                 info.setCompetition(EventInfo.CUP_COMPETITION);
                                 info.setRound(0); // unknown
-                            } else if(part3.matches("\\d\\d")) { // Two digits
+                            } else if(part3.matches("\\d\\d") && part2.matches("\\d\\d")) { // Two digits
                                 // This is a league game.
                                 info.setCompetition(EventInfo.LEAGUE_COMPETITION);
                                 info.setRound(Integer.parseInt(part2));
@@ -184,6 +184,10 @@ public class Collector {
                                 // This is Champions League
                                 info.setCompetition(EventInfo.CL_COMPETITION);
                                 info.setRound(Integer.parseInt(part3));
+                            } else if(part2.startsWith(EventInfo.UEFA_QUALIFICATION)){
+                                // This is a qualifier game for EL or CL
+                                info.setCompetition(EventInfo.UEFA_QUALIFICATION);
+                                info.setRound(Integer.parseInt(part2.substring(1)));
                             } else {
                                 info.setCompetition("unknown");
                                 info.setRound(0);
