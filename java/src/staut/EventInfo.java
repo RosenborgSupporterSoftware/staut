@@ -14,6 +14,7 @@ public class EventInfo implements Comparable {
     public final static String EL_COMPETITION = "EL";
     public final static String CL_COMPETITION = "CL";
     public final static String UEFA_QUALIFICATION = "Q";
+    public final static String UNKNOWN = "unknown";
     
     private final int eventId;
     private String eventName;

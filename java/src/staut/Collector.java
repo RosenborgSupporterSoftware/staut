@@ -98,6 +98,11 @@ public class Collector {
     
     public static EventInfo extractEventInfo(Integer eventId) throws IOException {
         EventInfo info = new EventInfo(eventId);
+        // Set some defaults to use if we can not find all information
+        info.setCompetition(EventInfo.UNKNOWN);
+        info.setEventCode(EventInfo.UNKNOWN);
+        info.setLocation(EventInfo.UNKNOWN);
+        info.setRound(0);
         URL eventPage = new URL(BASE_EVENT_PAGE_URL + eventId);
         HttpURLConnection uc = getHttpURLConnection(eventPage);
         info.setEventURL(uc.getURL());
@@ -188,9 +193,6 @@ public class Collector {
                                 // This is a qualifier game for EL or CL
                                 info.setCompetition(EventInfo.UEFA_QUALIFICATION);
                                 info.setRound(Integer.parseInt(part2.substring(1)));
-                            } else {
-                                info.setCompetition("unknown");
-                                info.setRound(0);
                             }
                         }
                         break;
